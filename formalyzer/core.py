@@ -27,7 +27,7 @@ def read_pdf_text(pdf_file):
     reader = PdfReader(os.path.expanduser(pdf_file))
     return "\n".join(page.extract_text() for page in reader.pages)
 
-# %% ../nbs/00_core.ipynb 41
+# %% ../nbs/00_core.ipynb 10
 from bs4 import BeautifulSoup
 import json, re
 
@@ -56,7 +56,7 @@ def scrape_form_fields(html):
         })
     return fields
 
-# %% ../nbs/00_core.ipynb 42
+# %% ../nbs/00_core.ipynb 11
 from claudette import Chat
 
 def get_field_mappings(fields, recc_info, letter_text, model="claude-sonnet-4-20250514"):
@@ -81,7 +81,7 @@ Skip radio buttons.
     json_match = re.search(r'```json\s*(.*?)\s*```', response.content[0].text, re.DOTALL)
     return json.loads(json_match.group(1))
 
-# %% ../nbs/00_core.ipynb 43
+# %% ../nbs/00_core.ipynb 12
 async def fill_form(page, mappings, skip_prefilled=True):
     """Fill form fields using Playwright"""
     results = {'filled': [], 'skipped': [], 'errors': []}
@@ -106,13 +106,13 @@ async def fill_form(page, mappings, skip_prefilled=True):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-# %% ../nbs/00_core.ipynb 44
+# %% ../nbs/00_core.ipynb 13
 async def upload_recommendation(page, file_path):
     """Upload the recommendation PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(file_path)
 
-# %% ../nbs/00_core.ipynb 45
+# %% ../nbs/00_core.ipynb 14
 import asyncio
 
 async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
@@ -134,7 +134,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
-# %% ../nbs/00_core.ipynb 47
+# %% ../nbs/00_core.ipynb 16
 def read_info(recc_info:str, pdf_path:str, urls:str):
     "parse CLI args and read input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
@@ -150,7 +150,7 @@ def read_info(recc_info:str, pdf_path:str, urls:str):
         urls = [urls]
     return recc_info, letter_text, urls 
 
-# %% ../nbs/00_core.ipynb 50
+# %% ../nbs/00_core.ipynb 17
 import os 
 from playwright.async_api import async_playwright
 from fastcore.script import call_parse
