@@ -20,7 +20,7 @@ manually.
 ### Requirements:
 
 - Playwright
-- `ANTHROPIC_API_KEY` env var. (Could support other LLMs layer)
+- `ANTHROPIC_API_KEY` env var. (Could support other LLMs later)
 - pdftotext
 
 If you are new to using `nbdev` here are some useful pointers to get you
