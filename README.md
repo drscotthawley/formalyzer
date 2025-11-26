@@ -75,7 +75,8 @@ directory:
     `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug`
 2.  Launch a local web server:
     `python -m http.server 8000 --directory example/`
-3.  Run the script:
+3.  Set your `ANTHROPIC_API_KEY` shell environment variable.
+4.  Run the script:
     `formalyzer --debug example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt`
 
 ## Developer Guide
