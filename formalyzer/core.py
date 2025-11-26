@@ -133,13 +133,13 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-# %% ../nbs/00_core.ipynb 17
+# %% ../nbs/00_core.ipynb 15
 async def upload_recommendation(page, file_path):
     """Upload the recommendation PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(file_path)
 
-# %% ../nbs/00_core.ipynb 18
+# %% ../nbs/00_core.ipynb 16
 import asyncio
 
 async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
@@ -165,7 +165,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
-# %% ../nbs/00_core.ipynb 20
+# %% ../nbs/00_core.ipynb 18
 def read_info(recc_info:str, pdf_path:str, urls:str):
     "parse CLI args and read input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
@@ -181,7 +181,7 @@ def read_info(recc_info:str, pdf_path:str, urls:str):
         urls = [urls]
     return recc_info, letter_text, urls 
 
-# %% ../nbs/00_core.ipynb 21
+# %% ../nbs/00_core.ipynb 19
 import os 
 from playwright.async_api import async_playwright
 from fastcore.script import call_parse
