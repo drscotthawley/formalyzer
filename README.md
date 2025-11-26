@@ -66,6 +66,18 @@ $ pip install formalyzer
 After installing, users need to run `playwright install chromium` to
 download the browser binaries.
 
+# Demo
+
+Using `example/` data. On MacOS, from the main `formalyzer` package
+directory:
+
+1.  Start up Chrome:
+    `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug`
+2.  Launch a local web server:
+    `python -m http.server 8000 --directory example/`
+3.  Run the script:
+    `formalyzer --debug example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt`
+
 ## Developer Guide
 
 ### Install formalyzer in Development mode
@@ -94,6 +106,4 @@ can find package manager specific guidelines on
 
 - Enable switching from Anthropic API to local LLM and/or CoPilot API
   (if possible)
-- Add `example/` files for test/tutorial execution.
-- Handle more diverse forms (radio buttons, likerts)
 - Better documentation ;-)
