@@ -37,7 +37,7 @@ def scrape_form_fields(html):
     soup = BeautifulSoup(html, 'html.parser')
     fields = []
     for inp in soup.find_all(['input', 'select', 'textarea']):
-        field_id = inp.get('id', '')
+        field_id = inp.get('id') or inp.get('name', '')
         if not field_id: continue
         field_type = inp.get('type', inp.name)
         if field_type in ['hidden', 'submit', 'button']: continue
