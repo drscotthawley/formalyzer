@@ -28,7 +28,7 @@ def read_pdf_text(pdf_file):
     reader = PdfReader(os.path.expanduser(pdf_file))
     return "\n".join(page.extract_text() for page in reader.pages)
 
-# %% ../nbs/00_core.ipynb 10
+# %% ../nbs/00_core.ipynb 11
 from bs4 import BeautifulSoup
 import json, re
 
@@ -57,7 +57,7 @@ def scrape_form_fields(html):
         })
     return fields
 
-# %% ../nbs/00_core.ipynb 12
+# %% ../nbs/00_core.ipynb 13
 from claudette import Chat
 
 def get_field_mappings(fields, recc_info, letter_text, model="claude-sonnet-4-20250514", debug=False):
@@ -83,7 +83,7 @@ Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
     json_match = re.search(r'```json\s*(.*?)\s*```', response.content[0].text, re.DOTALL)
     return json.loads(json_match.group(1))
 
-# %% ../nbs/00_core.ipynb 14
+# %% ../nbs/00_core.ipynb 15
 async def get_element_info(page, field_id):
     "given an id or a name, find the element on the page and get its info"
     elem = page.locator(f'#{field_id}, [name="{field_id}"]')
@@ -133,15 +133,13 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-# %% ../nbs/00_core.ipynb 15
+# %% ../nbs/00_core.ipynb 16
 async def upload_recommendation(page, file_path):
     """Upload the recommendation PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(file_path)
 
-# %% ../nbs/00_core.ipynb 16
-import asyncio
-
+# %% ../nbs/00_core.ipynb 17
 async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     """Process a single recommendation URL"""
     await page.goto(url)
@@ -165,7 +163,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
-# %% ../nbs/00_core.ipynb 18
+# %% ../nbs/00_core.ipynb 19
 def read_info(recc_info:str, pdf_path:str, urls:str):
     "parse CLI args and read input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
@@ -181,7 +179,7 @@ def read_info(recc_info:str, pdf_path:str, urls:str):
         urls = [urls]
     return recc_info, letter_text, urls 
 
-# %% ../nbs/00_core.ipynb 19
+# %% ../nbs/00_core.ipynb 20
 async def setup_browser():
     """Connect to Chrome with remote debugging"""
     from playwright.async_api import async_playwright
@@ -206,6 +204,7 @@ async def run_formalyzer(recc_info, letter_text, urls, pdf_path, debug=False):
 
 
 from fastcore.script import call_parse
+import asyncio
 
 @call_parse
 def main(recc_info:str, pdf_path:str, urls:str, debug:bool=False):
