@@ -103,7 +103,11 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
             if tag == 'select':
                 await elem.select_option(label=value)
             else:
-                await elem.fill(value)
+                input_type = await elem.evaluate('el => el.type')
+                if input_type == 'radio':
+                    await elem.click()
+                else:
+                    await elem.fill(value)
             results['filled'].append(field_id)
         except Exception as e:
             print(f"  Error filling {field_id}: {e}")
