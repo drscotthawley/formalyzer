@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['read_recc_info', 'read_urls_file', 'read_pdf_text', 'scrape_form_fields', 'get_field_mappings', 'fill_form',
-           'upload_recommendation', 'main']
+           'upload_recommendation', 'main', 'process_url']
 
 # %% ../nbs/00_core.ipynb 4
 import os 
@@ -30,7 +30,6 @@ def read_pdf_text(pdf_file):
 # %% ../nbs/00_core.ipynb 43
 from bs4 import BeautifulSoup
 import json, re
-from claudette import Chat
 
 
 def scrape_form_fields(html):
@@ -57,6 +56,8 @@ def scrape_form_fields(html):
         })
     return fields
 
+# %% ../nbs/00_core.ipynb 44
+from claudette import Chat
 
 def get_field_mappings(fields, recc_info, letter_text, model="claude-sonnet-4-20250514"):
     """Use LLM to map recommender info and letter to form fields"""
@@ -80,7 +81,7 @@ Skip radio buttons.
     json_match = re.search(r'```json\s*(.*?)\s*```', response.content[0].text, re.DOTALL)
     return json.loads(json_match.group(1))
 
-
+# %% ../nbs/00_core.ipynb 45
 async def fill_form(page, mappings, skip_prefilled=True):
     """Fill form fields using Playwright"""
     results = {'filled': [], 'skipped': [], 'errors': []}
@@ -105,13 +106,13 @@ async def fill_form(page, mappings, skip_prefilled=True):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-
+# %% ../nbs/00_core.ipynb 46
 async def upload_recommendation(page, file_path):
     """Upload the recommendation PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(file_path)
 
-# %% ../nbs/00_core.ipynb 45
+# %% ../nbs/00_core.ipynb 48
 import os 
 from fastcore.script import call_parse
 
@@ -128,3 +129,27 @@ def main(pdf_path: str, urls: str, debug: bool = False):
     if debug: print("urls =\n",urls)
     letter_text = read_pdf_text(pdf_path)
     if debug: print("letter_text =\n",letter_text) 
+
+# %% ../nbs/00_core.ipynb 51
+import os 
+from fastcore.script import call_parse
+import asyncio
+
+async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
+    """Process a single recommendation URL"""
+    await page.goto(url)
+    html = await page.content()
+    
+    fields = scrape_form_fields(html)
+    if debug: print(f"Found {len(fields)} fields")
+    
+    mappings = get_field_mappings(fields, recc_info, letter_text)
+    if debug: print(f"Got {len(mappings)} mappings from LLM")
+    
+    results = await fill_form(page, mappings)
+    if debug: print(f"Filled: {len(results['filled'])}, Errors: {len(results['errors'])}")
+    
+    await upload_recommendation(page, pdf_path)
+    if debug: print("Uploaded PDF")
+    
+    input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
