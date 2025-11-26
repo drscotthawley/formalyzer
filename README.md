@@ -28,7 +28,21 @@ started.
 
 ## Usage
 
-`./formalyzer.py <recc_info.txt> <recc_letter.pdf> <url_list.txt>`
+On MacOS, startup the Chrome browser looking to port 9222 by executing
+this command in the terminal:
+
+``` bash
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+```
+
+Then you can run this command:
+
+``` bash
+./formalyzer.py <recc_info.txt> <recc_letter.pdf> <url_list.txt>
+```
+
+where `recc_info.txt` contains information about the recommender, their
+name, their title, their address, phone number and email.
 
 ### Installation
 
@@ -77,3 +91,7 @@ Documentation can be found hosted on this GitHub
 can find package manager specific guidelines on
 [conda](https://anaconda.org/drscotthawley/formalyzer) and
 [pypi](https://pypi.org/project/formalyzer/) respectively.
+
+I’ve run nbdev readme and and it generates, it tries to run a lot of not
+exported code cells from my `nbs/00_core.ipynb` file. I don’t want that,
+but I do want a new README file.
