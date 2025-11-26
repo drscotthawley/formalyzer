@@ -2,7 +2,7 @@
 
 # %% auto 0
 __all__ = ['read_recc_info', 'read_urls_file', 'read_pdf_text', 'scrape_form_fields', 'get_field_mappings', 'fill_form',
-           'upload_recommendation', 'main', 'process_url']
+           'upload_recommendation', 'process_url', 'read_info', 'setup_browser', 'run_formalyzer', 'main']
 
 # %% ../nbs/00_core.ipynb 4
 import os 
@@ -27,7 +27,7 @@ def read_pdf_text(pdf_file):
     reader = PdfReader(os.path.expanduser(pdf_file))
     return "\n".join(page.extract_text() for page in reader.pages)
 
-# %% ../nbs/00_core.ipynb 43
+# %% ../nbs/00_core.ipynb 41
 from bs4 import BeautifulSoup
 import json, re
 
@@ -56,7 +56,7 @@ def scrape_form_fields(html):
         })
     return fields
 
-# %% ../nbs/00_core.ipynb 44
+# %% ../nbs/00_core.ipynb 42
 from claudette import Chat
 
 def get_field_mappings(fields, recc_info, letter_text, model="claude-sonnet-4-20250514"):
@@ -81,7 +81,7 @@ Skip radio buttons.
     json_match = re.search(r'```json\s*(.*?)\s*```', response.content[0].text, re.DOTALL)
     return json.loads(json_match.group(1))
 
-# %% ../nbs/00_core.ipynb 45
+# %% ../nbs/00_core.ipynb 43
 async def fill_form(page, mappings, skip_prefilled=True):
     """Fill form fields using Playwright"""
     results = {'filled': [], 'skipped': [], 'errors': []}
@@ -106,33 +106,13 @@ async def fill_form(page, mappings, skip_prefilled=True):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-# %% ../nbs/00_core.ipynb 46
+# %% ../nbs/00_core.ipynb 44
 async def upload_recommendation(page, file_path):
     """Upload the recommendation PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(file_path)
 
-# %% ../nbs/00_core.ipynb 48
-import os 
-from fastcore.script import call_parse
-
-@call_parse
-def main(pdf_path: str, urls: str, debug: bool = False):
-    pdf_path = os.path.expanduser(pdf_path) 
-    assert os.path.exists(pdf_path), f"File not found: {pdf_path}"
-    if os.path.exists(os.path.expanduser(urls)): 
-        if debug: print(f"File {urls} exists. Reading.")
-        urls = read_urls_file(urls)
-    else: 
-        print(f"No file {urls}. Treating it as a single url") 
-        urls = [urls] 
-    if debug: print("urls =\n",urls)
-    letter_text = read_pdf_text(pdf_path)
-    if debug: print("letter_text =\n",letter_text) 
-
-# %% ../nbs/00_core.ipynb 51
-import os 
-from fastcore.script import call_parse
+# %% ../nbs/00_core.ipynb 45
 import asyncio
 
 async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
@@ -153,3 +133,54 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     if debug: print("Uploaded PDF")
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
+
+# %% ../nbs/00_core.ipynb 47
+def read_info(recc_info:str, pdf_path:str, urls:str):
+    "parse CLI args and read input files"
+    recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
+    assert os.path.exists(recc_info), f"File not found: {recc_info}"
+    assert os.path.exists(pdf_path), f"File not found: {pdf_path}"
+    recc_info = read_recc_info(recc_info) 
+    letter_text = read_pdf_text(pdf_path)
+    if os.path.exists(os.path.expanduser(urls)): 
+        print(f"File {urls} exists. Reading.")
+        urls = read_urls_file(urls)
+    else: 
+        print(f"No file {urls}. Treating it as a single url") 
+        urls = [urls]
+    return recc_info, letter_text, urls 
+
+# %% ../nbs/00_core.ipynb 52
+import os 
+from playwright.async_api import async_playwright
+from fastcore.script import call_parse
+
+async def setup_browser():
+    """Connect to Chrome with remote debugging"""
+    pw = await async_playwright().start()
+    browser = await pw.chromium.connect_over_cdp("http://localhost:9222")
+    page = await browser.new_page()
+    return pw, browser, page
+
+async def run_formalyzer(recc_info, letter_text, urls, pdf_path, debug=False):
+    """Main async workflow"""
+    pw, browser, page = await setup_browser()
+    try:
+        for i, url in enumerate(urls):
+            if not url.strip(): continue  # skip empty urls
+            print(f"\nURL {i+1} of {len(urls)}: {url}")
+            await process_url(page, url, recc_info, letter_text, pdf_path, debug=debug)
+    finally:
+        await browser.close()
+        await pw.stop()
+
+@call_parse
+def main(recc_info:str, pdf_path:str, urls:str, debug:bool=False):
+    recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
+    if debug:
+        print("recc_info =\n", recc_info)
+        print("letter_text =\n", letter_text)
+        print("urls =\n", urls)
+    
+    # Run the async workflow
+    asyncio.run(run_formalyzer(recc_info, letter_text, urls, pdf_path, debug))
