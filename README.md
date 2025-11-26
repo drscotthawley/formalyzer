@@ -19,9 +19,9 @@ manually.
 
 ### Requirements:
 
-- Playwright
-- `ANTHROPIC_API_KEY` env var. (Could support other LLMs later)
-- pdftotext
+- `ANTHROPIC_API_KEY` environment variable set (Could support other LLMs
+  later)
+- `beautifulsoup4, playwright, claudette, pypdf, fastcore`
 
 If you are new to using `nbdev` here are some useful pointers to get you
 started.
