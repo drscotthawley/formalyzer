@@ -91,6 +91,7 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
         if debug: print(f"Mapping {i+1} of {len(mappings)}:  Processing {field_id}...")
         try:
             elem = page.locator(f'#{field_id}')
+            await elem.wait_for(timeout=1000) # 1 second. default timeout for non-found fields is 30 seconds.
             tag = await elem.evaluate('el => el.tagName.toLowerCase()')
             
             if skip_prefilled and tag != 'select':
