@@ -182,12 +182,10 @@ def read_info(recc_info:str, pdf_path:str, urls:str):
     return recc_info, letter_text, urls 
 
 # %% ../nbs/00_core.ipynb 19
-import os 
-from playwright.async_api import async_playwright
-from fastcore.script import call_parse
-
 async def setup_browser():
     """Connect to Chrome with remote debugging"""
+    from playwright.async_api import async_playwright
+
     pw = await async_playwright().start()
     browser = await pw.chromium.connect_over_cdp("http://localhost:9222")
     page = await browser.new_page()
@@ -206,6 +204,8 @@ async def run_formalyzer(recc_info, letter_text, urls, pdf_path, debug=False):
         await browser.close()
         await pw.stop()
 
+
+from fastcore.script import call_parse
 
 @call_parse
 def main(recc_info:str, pdf_path:str, urls:str, debug:bool=False):
