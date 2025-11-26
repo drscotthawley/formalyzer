@@ -120,15 +120,19 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     await page.goto(url)
     html = await page.content()
     
+    if debug: print("Scraping form fields")
     fields = scrape_form_fields(html)
     if debug: print(f"Found {len(fields)} fields")
     
+    if debug: print("Calling LLM to get field mappings")
     mappings = get_field_mappings(fields, recc_info, letter_text)
     if debug: print(f"Got {len(mappings)} mappings from LLM")
     
+    if debug: print("Filling in form")
     results = await fill_form(page, mappings)
     if debug: print(f"Filled: {len(results['filled'])}, Errors: {len(results['errors'])}")
     
+    if debug: print("Uploading PDF") 
     await upload_recommendation(page, pdf_path)
     if debug: print("Uploaded PDF")
     

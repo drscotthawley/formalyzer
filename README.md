@@ -32,13 +32,13 @@ On MacOS, startup the Chrome browser looking to port 9222 by executing
 this command in the terminal:
 
 ``` bash
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug
 ```
 
 Then you can run this command:
 
 ``` bash
-./formalyzer.py <recc_info.txt> <recc_letter.pdf> <url_list.txt>
+./formalyzer.py --debug <recc_info.txt> <recc_letter.pdf> <url_list.txt>
 ```
 
 where `recc_info.txt` contains information about the recommender, their
