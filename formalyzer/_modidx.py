@@ -5,6 +5,11 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://drscotthawley.github.io',
                 'git_url': 'https://github.com/drscotthawley/formalyzer',
                 'lib_path': 'formalyzer'},
-  'syms': { 'formalyzer.core': { 'formalyzer.core.main': ('core.html#main', 'formalyzer/core.py'),
+  'syms': { 'formalyzer.core': { 'formalyzer.core.fill_form': ('core.html#fill_form', 'formalyzer/core.py'),
+                                 'formalyzer.core.get_field_mappings': ('core.html#get_field_mappings', 'formalyzer/core.py'),
+                                 'formalyzer.core.main': ('core.html#main', 'formalyzer/core.py'),
                                  'formalyzer.core.read_pdf_text': ('core.html#read_pdf_text', 'formalyzer/core.py'),
-                                 'formalyzer.core.read_urls_file': ('core.html#read_urls_file', 'formalyzer/core.py')}}}
+                                 'formalyzer.core.read_recc_info': ('core.html#read_recc_info', 'formalyzer/core.py'),
+                                 'formalyzer.core.read_urls_file': ('core.html#read_urls_file', 'formalyzer/core.py'),
+                                 'formalyzer.core.scrape_form_fields': ('core.html#scrape_form_fields', 'formalyzer/core.py'),
+                                 'formalyzer.core.upload_recommendation': ('core.html#upload_recommendation', 'formalyzer/core.py')}}}
