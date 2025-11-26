@@ -105,6 +105,7 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
             else:
                 input_type = await elem.evaluate('el => el.type')
                 if input_type == 'radio':
+                    print(f"  Clicking radio button {field_id} with value {value}")
                     await elem.click()
                 else:
                     await elem.fill(value)
