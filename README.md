@@ -38,7 +38,7 @@ this command in the terminal:
 Then you can run this command:
 
 ``` bash
-./formalyzer.py --debug <recc_info.txt> <recc_letter.pdf> <url_list.txt>
+formalyzer --debug <recc_info.txt> <recc_letter.pdf> <url_list.txt>
 ```
 
 where `recc_info.txt` contains information about the recommender, their
