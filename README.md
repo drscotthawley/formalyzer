@@ -40,6 +40,7 @@ formalyzer --debug <recc_info.txt> <recc_letter.pdf> <url_list.txt>
 
 where `recc_info.txt` contains information about the recommender, their
 name, their title, their address, phone number and email.
+`urls_list.txt` is a file containing one URL per line.
 
 ### Installation
 
