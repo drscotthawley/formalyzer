@@ -150,7 +150,7 @@ def read_info(recc_info:str, pdf_path:str, urls:str):
         urls = [urls]
     return recc_info, letter_text, urls 
 
-# %% ../nbs/00_core.ipynb 52
+# %% ../nbs/00_core.ipynb 50
 import os 
 from playwright.async_api import async_playwright
 from fastcore.script import call_parse
@@ -161,6 +161,7 @@ async def setup_browser():
     browser = await pw.chromium.connect_over_cdp("http://localhost:9222")
     page = await browser.new_page()
     return pw, browser, page
+
 
 async def run_formalyzer(recc_info, letter_text, urls, pdf_path, debug=False):
     """Main async workflow"""
@@ -174,8 +175,10 @@ async def run_formalyzer(recc_info, letter_text, urls, pdf_path, debug=False):
         await browser.close()
         await pw.stop()
 
+
 @call_parse
 def main(recc_info:str, pdf_path:str, urls:str, debug:bool=False):
+    assert os.environ.get('ANTHROPIC_API_KEY'), "Please set ANTHROPIC_API_KEY environment variable" # used by Claudette
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
     if debug:
         print("recc_info =\n", recc_info)
