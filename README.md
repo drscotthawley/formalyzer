@@ -92,6 +92,7 @@ can find package manager specific guidelines on
 [conda](https://anaconda.org/drscotthawley/formalyzer) and
 [pypi](https://pypi.org/project/formalyzer/) respectively.
 
-I’ve run nbdev readme and and it generates, it tries to run a lot of not
-exported code cells from my `nbs/00_core.ipynb` file. I don’t want that,
-but I do want a new README file.
+## TODO:
+
+- Enable switching from Anthropic API to local LLM and/or CoPilot API
+  (if possible)
