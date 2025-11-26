@@ -105,6 +105,6 @@ can find package manager specific guidelines on
 ## TODO:
 
 - Test with a less-than-superlative recc letter – to make sure it’s not
-  just always selecting the top field.
+  just always selecting the top rating(s).
 - Enable switching from Anthropic API to local LLM and/or CoPilot API
   (if possible)
