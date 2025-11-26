@@ -5,4 +5,4 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://drscotthawley.github.io',
                 'git_url': 'https://github.com/drscotthawley/formalyzer',
                 'lib_path': 'formalyzer'},
-  'syms': {'formalyzer.core': {'formalyzer.core.foo': ('core.html#foo', 'formalyzer/core.py')}}}
+  'syms': {'formalyzer.core': {'formalyzer.core.main': ('core.html#main', 'formalyzer/core.py')}}}
