@@ -93,3 +93,6 @@ can find package manager specific guidelines on
 
 - Enable switching from Anthropic API to local LLM and/or CoPilot API
   (if possible)
+- Add `example/` files for test/tutorial execution.
+- Handle more diverse forms (radio buttons, likerts)
+- Better documentation ;-)
