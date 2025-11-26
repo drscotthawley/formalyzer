@@ -90,7 +90,7 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
         field_id, value = item['id'], item['value']
         if debug: print(f"Mapping {i+1} of {len(mappings)}:  Processing {field_id}...")
         try:
-            elem = page.locator(f'#{field_id}')
+            elem = page.locator(f'#{field_id}, [name="{field_id}"]')
             await elem.wait_for(timeout=1000) # 1 second. default timeout for non-found fields is 30 seconds.
             tag = await elem.evaluate('el => el.tagName.toLowerCase()')
             
@@ -106,6 +106,7 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
                 await elem.fill(value)
             results['filled'].append(field_id)
         except Exception as e:
+            print(f"  Error filling {field_id}: {e}")
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
