@@ -23,9 +23,6 @@ manually.
   later)
 - `beautifulsoup4, playwright, claudette, pypdf, fastcore`
 
-If you are new to using `nbdev` here are some useful pointers to get you
-started.
-
 ## Usage
 
 On MacOS, startup the Chrome browser looking to port 9222 by executing
