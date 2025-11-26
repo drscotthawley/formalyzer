@@ -59,7 +59,7 @@ def scrape_form_fields(html):
 # %% ../nbs/00_core.ipynb 11
 from claudette import Chat
 
-def get_field_mappings(fields, recc_info, letter_text, model="claude-sonnet-4-20250514"):
+def get_field_mappings(fields, recc_info, letter_text, model="claude-sonnet-4-20250514", debug=False):
     """Use LLM to map recommender info and letter to form fields"""
     prompt = f"""You are filling out a graduate school recommendation form.
 
@@ -77,16 +77,18 @@ Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 Skip radio buttons.
 """
     chat = Chat(model=model)
+    if debug: print(f"  Prompt length is {len(prompt)} characters")
     response = chat(prompt)
     json_match = re.search(r'```json\s*(.*?)\s*```', response.content[0].text, re.DOTALL)
     return json.loads(json_match.group(1))
 
 # %% ../nbs/00_core.ipynb 12
-async def fill_form(page, mappings, skip_prefilled=True):
+async def fill_form(page, mappings, skip_prefilled=True, debug=False):
     """Fill form fields using Playwright"""
     results = {'filled': [], 'skipped': [], 'errors': []}
-    for item in mappings:
+    for i, item in enumerate(mappings):
         field_id, value = item['id'], item['value']
+        if debug: print(f"Mapping {i+1} of {len(mappings)}:  Processing {field_id}...")
         try:
             elem = page.locator(f'#{field_id}')
             tag = await elem.evaluate('el => el.tagName.toLowerCase()')
@@ -125,11 +127,11 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     if debug: print(f"Found {len(fields)} fields")
     
     if debug: print("Calling LLM to get field mappings")
-    mappings = get_field_mappings(fields, recc_info, letter_text)
+    mappings = get_field_mappings(fields, recc_info, letter_text, debug=debug)
     if debug: print(f"Got {len(mappings)} mappings from LLM")
     
     if debug: print("Filling in form")
-    results = await fill_form(page, mappings)
+    results = await fill_form(page, mappings, debug=debug)
     if debug: print(f"Filled: {len(results['filled'])}, Errors: {len(results['errors'])}")
     
     if debug: print("Uploading PDF") 
