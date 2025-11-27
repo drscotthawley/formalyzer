@@ -51,13 +51,7 @@ Install latest from the GitHub
 $ pip install git+https://github.com/drscotthawley/formalyzer.git
 ```
 
-or from [conda](https://anaconda.org/drscotthawley/formalyzer)
-
-``` sh
-$ conda install -c drscotthawley formalyzer
-```
-
-or from [pypi](https://pypi.org/project/formalyzer/)
+or from [pypi](https://pypi.org/project/formalyzer/):
 
 ``` sh
 $ pip install formalyzer
