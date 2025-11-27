@@ -62,8 +62,6 @@ def scrape_form_fields(html):
     return fields
 
 # %% ../nbs/00_core.ipynb 15
-from claudette import Chat
-
 def get_field_mappings(
         fields,         # list of form fields
         recc_info,      # info on recommending person
@@ -86,6 +84,12 @@ For each field, provide the field ID and value to fill. For dropdowns, pick from
 Pay attention to groups of radio buttons (grouped via div or similar id prefixes) as they may form likert scales.
 Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 """
+    if model.upper() == 'ANTHROPIC' or 'claude' in model:
+        from claudette import Chat
+        model = 'claude-sonnet-4-20250514'  # or whatever default Claude model
+    else:
+        from lisette import Chat
+
     chat = Chat(model=model)
     if debug: print(f"  Prompt length is {len(prompt)} characters")
     response = chat(prompt)
