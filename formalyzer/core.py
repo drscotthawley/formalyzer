@@ -243,11 +243,10 @@ def main(
     recc_info: str,   # text file with recommender name, address, etc
     pdf_path: str,    # name of PDF recc letter
     urls: str,        # txt file w/ one URL per line
-    model: str='ANTHROPIC',  # 'ollama/qwen2.5:14b' for local model
+    model: str='claude-sonnet-4-20250514',  # 'ollama/qwen2.5:14b' for local model
     debug: bool=False,  # best to always turn this on, actually
     ):
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
-    if model.upper() == 'ANTHROPIC': model = 'claude-sonnet-4-20250514'
     if debug:
         print(f"recc_info ({len(recc_info)} characters) =\n", recc_info)
         print(f"letter_text ({len(letter_text)} characters)=\n", letter_text)
