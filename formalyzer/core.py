@@ -128,7 +128,8 @@ For each field, provide the field ID and value to fill.
 Be careful to use ONLY the exact field IDs provided! 
 For dropdowns, pick from the options listed.
 Pay attention to groups of radio buttons (grouped via div or similar id prefixes) as they may form likert scales.
-Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
+Return as valid JSON array: [{{"id": "form_xxx", "value": "..."}}]
+Do not add any comments to the JSON. 
 """
 
 # %% ../nbs/00_core.ipynb 18
@@ -151,7 +152,8 @@ def get_field_mappings(
     if debug: print(f"  Prompt length is {len(prompt)} characters")
     response = chat(prompt)
     content_text = response.content[0].text if hasattr(response, 'content') else response.choices[0].message.content
-    content_text = re.sub(r'//.*', '', content_text) # llm may have added JS-style comments, we don't want
+    content_text = re.sub(r'//.*', '', content_text)        # llm may have added JS-style comments, we don't want
+    content_text = re.sub(r'/\*.*?\*/', '', content_text)   # and strip any /* */ -style comments
     if debug: print(f"LLM response:\n{content_text}\n")
     json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
     return json.loads(json_match.group(1))
