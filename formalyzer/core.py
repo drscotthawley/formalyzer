@@ -14,17 +14,17 @@ def read_text_file(filename:str) -> list:
         return f.read()
 
 # %% ../nbs/00_core.ipynb 6
-def read_urls_file(urls_file:str) -> list:
+def read_urls_file(filename:str) -> list:
     "read a text file where each line is a url of a submission site" 
-    return [line for line in read_text_file(urls_file).splitlines() if line]
+    return [line for line in read_text_file(filename).splitlines() if line]
 
 # %% ../nbs/00_core.ipynb 8
 from pypdf import PdfReader
 import logging
 logging.getLogger("pypdf").setLevel(logging.ERROR)
 
-def read_pdf_text(pdf_file:str):
-    reader = PdfReader(os.path.expanduser(pdf_file))
+def read_pdf_text(filename:str):
+    reader = PdfReader(os.path.expanduser(filename))
     return "\n".join(page.extract_text() for page in reader.pages)
 
 # %% ../nbs/00_core.ipynb 11
@@ -190,7 +190,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     if debug: print(f"Filled: {len(results['filled'])}, Errors: {len(results['errors'])}")
     
     if debug: print("Uploading PDF") 
-    await upload_pdf(page, pdf_path)
+    await upload_recommendation(page, pdf_path)
     if debug: print("Uploaded PDF")
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
