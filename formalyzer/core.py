@@ -228,7 +228,13 @@ from fastcore.script import call_parse
 import asyncio
 
 @call_parse
-def main(recc_info:str, pdf_path:str, urls:str, model:str='ollama/qwen3:0.6b', debug:bool=False):
+def main(
+    recc_info:str,   # text file with recommender name, address, etc
+    pdf_path:str,    # name of PDF recc letter
+    urls:str,        # txt file w/ one URL per line
+    model:str='ANTHROPIC',  # 'ollama/qwen3:0.6b' for local model
+    debug:bool=False,  # best to always turn this on, actually
+    ):
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
     if debug:
         print("recc_info =\n", recc_info)
