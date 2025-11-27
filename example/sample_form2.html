@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generic University Graduate Admissions — Recommendation Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 1rem; }
+    input, select, textarea { width: 100%; margin-bottom: 0.5rem; box-sizing: border-box; }
+    input[type="radio"], input[type="file"] { width: auto; }
+    .likert .row { white-space: nowrap; margin: 0.5rem 0; }
+    .likert .row .q { display: block; font-weight: bold; white-space: normal; }
+    .likert .row label { margin-right: 0.5rem; }
+    fieldset { margin: 1rem 0; }
+    textarea { min-height: 120px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="generic_logo.jpg" width="25%">
+    <h1>Generic University Graduate Admissions</h1>
+    <p>Recommendation Form</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Recommendation Status</h2>
+      <p>Your recommendation has not yet been submitted. If you have completed your recommendation and would like to submit it now, scroll to the bottom of this page and click <strong>Submit</strong>.</p>
+    </section>
+
+    <section>
+      <h2>Applicant Information</h2>
+      <fieldset>
+        <legend>Applicant</legend>
+
+        <label for="applicant_name">Applicant Name</label>
+        <input id="applicant_name" name="applicant_name" type="text" required />
+
+        <label for="applicant_message">Message from Applicant (optional)</label>
+        <input id="applicant_message" name="applicant_message" type="text" />
+
+        <label>FERPA Waiver</label>
+        <label><input type="radio" name="ferpa_waiver" value="waive" required /> I waive my right to access this report.</label>
+        <label><input type="radio" name="ferpa_waiver" value="do_not_waive" /> I do not waive my right to access this report.</label>
+
+        <label for="program">Program applying for</label>
+        <input id="program" name="program" type="text" placeholder="e.g., Physics – PhD" required />
+
+        <label for="discipline">Discipline/Department</label>
+        <input id="discipline" name="discipline" type="text" placeholder="e.g., Applied Mathematics" />
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Recommender Information</h2>
+      <fieldset>
+        <legend>Recommender</legend>
+
+        <label for="prefix">Prefix</label>
+        <select id="prefix" name="prefix">
+          <option value="">Select…</option>
+          <option>Dr.</option>
+          <option>Prof.</option>
+          <option>Mr.</option>
+          <option>Ms.</option>
+          <option>Mrs.</option>
+        </select>
+
+        <label for="first_name">First Name</label>
+        <input id="first_name" name="first_name" type="text" required />
+
+        <label for="middle_name">Middle Name</label>
+        <input id="middle_name" name="middle_name" type="text" />
+
+        <label for="last_name">Last Name</label>
+        <input id="last_name" name="last_name" type="text" required />
+
+        <label for="organization">Current Organization</label>
+        <input id="organization" name="organization" type="text" required />
+
+        <label for="title">Current Position/Title</label>
+        <input id="title" name="title" type="text" required />
+
+        <label for="phone">Telephone (including country code)</label>
+        <input id="phone" name="phone" type="tel" required />
+
+        <label for="email">Email Address</label>
+        <input id="email" name="email" type="email" required />
+
+        <hr />
+
+        <label for="addr1">Institution/Business Address 1</label>
+        <input id="addr1" name="addr1" type="text" />
+
+        <label for="addr2">Institution/Business Address 2</label>
+        <input id="addr2" name="addr2" type="text" />
+
+        <label for="city">City</label>
+        <input id="city" name="city" type="text" />
+
+        <label for="state">State/Province/Region</label>
+        <input id="state" name="state" type="text" />
+
+        <label for="zip">Zip/Postal Code</label>
+        <input id="zip" name="zip" type="text" />
+
+        <label for="country">Country</label>
+        <input id="country" name="country" type="text" />
+
+        <label for="months_known">How long have you known the applicant? (months)</label>
+        <input id="months_known" name="months_known" type="number" min="0" step="1" />
+
+        <label for="years_range">How long have you known the applicant? (range)</label>
+        <select id="years_range" name="years_range">
+          <option value="">Select…</option>
+          <option>Less than 1 year</option>
+          <option>1–3 years</option>
+          <option>3–5 years</option>
+          <option>5–10 years</option>
+          <option>More than 10 years</option>
+        </select>
+
+        <label for="capacity">In what capacity?</label>
+        <select id="capacity" name="capacity">
+          <option value="">Select…</option>
+          <option>Instructor</option>
+          <option>Research Supervisor</option>
+          <option>Advisor</option>
+          <option>Employer</option>
+          <option>Other</option>
+        </select>
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Comparative Ratings</h2>
+      <p><em>Outstanding = top 1–2%, Excellent = top 3–10%, Very Good = top 11–30%, Good = middle 31–50%, Fair = lower 50%</em></p>
+
+      <fieldset>
+        <legend>Academic &amp; Research</legend>
+
+        <label for="rating_intellectual">Intellectual Ability</label>
+        <select name="rating_intellectual" id="rating_intellectual" required>
+          <option value="">Select…</option>
+          <option>Outstanding</option>
+          <option>Excellent</option>
+          <option>Very Good</option>
+          <option>Good</option>
+          <option>Fair</option>
+          <option>N/A</option>
+        </select>
+
+        <label for="rating_scientific">Scientific Background Knowledge</label>
+        <select name="rating_scientific" id="rating_scientific" required>
+          <option value="">Select…</option>
+          <option>Outstanding</option>
+          <option>Excellent</option>
+          <option>Very Good</option>
+          <option>Good</option>
+          <option>Fair</option>
+          <option>N/A</option>
+        </select>
+
+        <label for="rating_research">Research Aptitude &amp; Potential</label>
+        <select name="rating_research" id="rating_research" required>
+          <option value="">Select…</option>
+          <option>Outstanding</option>
+          <option>Excellent</option>
+          <option>Very Good</option>
+          <option>Good</option>
+          <option>Fair</option>
+          <option>N/A</option>
+        </select>
+
+        <label for="rating_prev_work">Quality of Previous Work</label>
+        <select name="rating_prev_work" id="rating_prev_work">
+          <option value="">Select…</option>
+          <option>Outstanding</option>
+          <option>Excellent</option>
+          <option>Very Good</option>
+          <option>Good</option>
+          <option>Fair</option>
+          <option>N/A</option>
+        </select>
+
+        <label for="rating_lab">Laboratory Skills / Techniques (if relevant)</label>
+        <select name="rating_lab" id="rating_lab">
+          <option value="">Select…</option>
+          <option>Outstanding</option>
+          <option>Excellent</option>
+          <option>Very Good</option>
+          <option>Good</option>
+          <option>Fair</option>
+          <option>N/A</option>
+        </select>
+      </fieldset>
+
+      <fieldset class="likert">
+        <legend>Communication &amp; Personal Qualities</legend>
+
+        <div class="row">
+          <span class="q">Ability in Oral Expression</span>
+          <label><input type="radio" name="rating_oral" value="Outstanding" required /> Outstanding</label>
+          <label><input type="radio" name="rating_oral" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_oral" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_oral" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_oral" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_oral" value="N/A" /> N/A</label>
+        </div>
+
+        <div class="row">
+          <span class="q">Writing Ability</span>
+          <label><input type="radio" name="rating_writing" value="Outstanding" required /> Outstanding</label>
+          <label><input type="radio" name="rating_writing" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_writing" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_writing" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_writing" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_writing" value="N/A" /> N/A</label>
+        </div>
+
+        <div class="row">
+          <span class="q">Originality / Imagination / Creativity</span>
+          <label><input type="radio" name="rating_originality" value="Outstanding" required /> Outstanding</label>
+          <label><input type="radio" name="rating_originality" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_originality" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_originality" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_originality" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_originality" value="N/A" /> N/A</label>
+        </div>
+
+        <div class="row">
+          <span class="q">Perseverance</span>
+          <label><input type="radio" name="rating_perseverance" value="Outstanding" /> Outstanding</label>
+          <label><input type="radio" name="rating_perseverance" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_perseverance" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_perseverance" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_perseverance" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_perseverance" value="N/A" /> N/A</label>
+        </div>
+
+        <div class="row">
+          <span class="q">Self-Reliance / Independence</span>
+          <label><input type="radio" name="rating_independence" value="Outstanding" /> Outstanding</label>
+          <label><input type="radio" name="rating_independence" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_independence" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_independence" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_independence" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_independence" value="N/A" /> N/A</label>
+        </div>
+
+        <div class="row">
+          <span class="q">Interpersonal Skills</span>
+          <label><input type="radio" name="rating_interpersonal" value="Outstanding" /> Outstanding</label>
+          <label><input type="radio" name="rating_interpersonal" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_interpersonal" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_interpersonal" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_interpersonal" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_interpersonal" value="N/A" /> N/A</label>
+        </div>
+
+        <div class="row">
+          <span class="q">Work Ethic</span>
+          <label><input type="radio" name="rating_work_ethic" value="Outstanding" /> Outstanding</label>
+          <label><input type="radio" name="rating_work_ethic" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_work_ethic" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_work_ethic" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_work_ethic" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_work_ethic" value="N/A" /> N/A</label>
+        </div>
+
+        <div class="row">
+          <span class="q">Suitability for Graduate School</span>
+          <label><input type="radio" name="rating_suitability" value="Outstanding" /> Outstanding</label>
+          <label><input type="radio" name="rating_suitability" value="Excellent" /> Excellent</label>
+          <label><input type="radio" name="rating_suitability" value="Very Good" /> Very Good</label>
+          <label><input type="radio" name="rating_suitability" value="Good" /> Good</label>
+          <label><input type="radio" name="rating_suitability" value="Fair" /> Fair</label>
+          <label><input type="radio" name="rating_suitability" value="N/A" /> N/A</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Program Suitability</legend>
+        <label for="phd_fit">How well-suited is this applicant for a competitive PhD program in the listed discipline?</label>
+        <select id="phd_fit" name="phd_fit">
+          <option value="">Select…</option>
+          <option>Ideally Suited</option>
+          <option>Qualified</option>
+          <option>Not Qualified</option>
+          <option>N/A</option>
+        </select>
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Letter of Recommendation</h2>
+      <fieldset>
+        <legend>Relationship to Applicant</legend>
+        <label for="capacity_text">In what capacity have you known the applicant?</label>
+        <textarea id="capacity_text" name="capacity_text" placeholder="e.g., I have known the applicant for two years as their research supervisor and course instructor..." required></textarea>
+      </fieldset>
+
+      <fieldset>
+        <legend>Letter Upload</legend>
+        <label for="letter_upload">Letter of Recommendation (PDF) *</label>
+        <input id="letter_upload" name="letter_upload" type="file" accept=".pdf,application/pdf" required />
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Submission</h2>
+      <fieldset>
+        <legend>Signature &amp; Submit</legend>
+        <label for="signature_name">Full Legal Name</label>
+        <input id="signature_name" name="signature_name" type="text" required />
+        <p>Please note that you may not edit your recommendation after submission.</p>
+        <button type="submit">Submit</button>
+        <button type="button">Save for Later</button>
+      </fieldset>
+    </section>
+  </main>
+
+  <footer>
+    <p>© Generic University Graduate School<br />
+    1337 Generic Pl.<br />
+    Springfield, WA 31416</p>
+    <p><a href="#">Contact</a> | <a href="#">Accessibility</a></p>
+  </footer>
+</body>
+</html>
