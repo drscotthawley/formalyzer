@@ -80,12 +80,16 @@ student data is not broadcast elsewhere. I recommend using `ollama` and
 starting with something medium-small like `qwen2.5:14b` (9 GB). Start up
 ollama:
 
-    ollama serve & 
-    ollama pull qwen2.5:14b 
+``` bash
+ollama serve & 
+ollama pull qwen2.5:14b 
+```
 
 Then you can use the `--model` CLI flag, e.g. 
 
-    formalyzer --debug --model 'ollama/qwen2.5:14b' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
+``` bash
+formalyzer --debug --model 'ollama/qwen2.5:14b' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
+```
 
 The quality of the form-filling will vary depending on the quality and
 size of the model you get. Smaller models like `mistral` (4 GB) may
