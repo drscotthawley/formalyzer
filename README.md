@@ -91,7 +91,7 @@ ollama:
 
 Then you can use the `--model` CLI flag, e.g. 
 
-    formalyzer --debug -model 'ollama/qwen2.5:14b' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
+    formalyzer --debug --model 'ollama/qwen2.5:14b' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
 
 The quality of the form-filling will vary depending on the quality and
 size of the model you get. Smaller models like `mistral` (4 GB) may
