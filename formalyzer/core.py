@@ -187,7 +187,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     if debug: print(f"Filled: {len(results['filled'])}, Errors: {len(results['errors'])}")
     
     if debug: print("Uploading PDF") 
-    await upload_recommendation(page, pdf_path)
+    await upload_pdf(page, pdf_path)
     if debug: print("Uploaded PDF")
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
