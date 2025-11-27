@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['read_text_file', 'read_urls_file', 'read_pdf_text', 'scrape_form_fields', 'trim_fields', 'make_prompt',
-           'get_field_mappings', 'get_element_info', 'should_skip', 'fill_element', 'fill_form',
-           'upload_recommendation', 'process_url', 'read_info', 'setup_browser', 'run_formalyzer', 'main']
+           'get_field_mappings', 'get_element_info', 'should_skip', 'fill_element', 'fill_form', 'upload_pdf',
+           'process_url', 'read_info', 'setup_browser', 'run_formalyzer', 'main']
 
 # %% ../nbs/00_core.ipynb 4
 import os 
@@ -166,10 +166,10 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
     return results
 
 # %% ../nbs/00_core.ipynb 24
-async def upload_recommendation(page, file_path):
-    """Upload the recommendation PDF"""
+async def upload_pdf(page, pdf_path):
+    """Upload the recommendation letter PDF"""
     file_input = page.locator('input[type="file"]').first
-    await file_input.set_input_files(file_path)
+    await file_input.set_input_files(pdf_path)
 
 # %% ../nbs/00_core.ipynb 25
 async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=False):
@@ -190,7 +190,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     if debug: print(f"Filled: {len(results['filled'])}, Errors: {len(results['errors'])}")
     
     if debug: print("Uploading PDF") 
-    await upload_recommendation(page, pdf_path)
+    await upload_pdf(page, pdf_path)
     if debug: print("Uploaded PDF")
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
