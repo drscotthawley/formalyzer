@@ -199,8 +199,6 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
 def read_info(recc_info: str, pdf_path: str, urls: str):
     "parse CLI args and read input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
-    assert os.path.exists(recc_info), f"File not found: {recc_info}"
-    assert os.path.exists(pdf_path), f"File not found: {pdf_path}"
     recc_info = read_text_file(recc_info) 
     letter_text = read_pdf_text(pdf_path)
     if os.path.exists(os.path.expanduser(urls)): 
