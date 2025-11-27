@@ -76,9 +76,9 @@ directory:
 ## Local LLM Execution
 
 For FERPA compliance, running a local model is preferable so that
-student data is not broadcast elsewhere. I recommend using `ollama` and
-starting with something medium-small like `qwen2.5:14b` (9 GB). Start up
-ollama:
+student data is not broadcast elsewhere. I recommend using
+[`ollama`](https://ollama.com) and starting with something medium-small
+like `qwen2.5:14b` (9 GB). Start up ollama:
 
 ``` bash
 ollama serve & 
