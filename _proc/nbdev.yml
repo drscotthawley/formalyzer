@@ -1,9 +1,0 @@
-project:
-  output-dir: _docs
-
-website:
-  title: "formalyzer"
-  site-url: "https://drscotthawley.github.io/formalyzer"
-  description: "Analyze PDF and web forms and fill in the forms"
-  repo-branch: main
-  repo-url: "https://github.com/drscotthawley/formalyzer"
