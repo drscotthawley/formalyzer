@@ -62,16 +62,13 @@ download the browser binaries.
 
 # Demo
 
-Using `example/` data. On MacOS, from the main `formalyzer` package
-directory:
+On MacOS, run these commands in Terminal:
 
-1.  Start up Chrome:
-    `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug`
-2.  Launch a local web server:
-    `python -m http.server 8000 --directory example/`
-3.  Set your `ANTHROPIC_API_KEY` shell environment variable.
-4.  Run the script:
-    `formalyzer --debug example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt`
+1.  `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug &`
+2.  `cd example`
+3.  `python -m http.server 8000 &`
+4.  `export ANTHROPIC_API_KEY="__your_API_key_goes_here__"`
+5.  `formalyzer --debug recc_info.txt sample_letter.pdf sample_urls.txt`
 
 ## Local LLM Execution
 
@@ -88,7 +85,7 @@ ollama pull qwen2.5:14b
 Then you can use the `--model` CLI flag, e.g. 
 
 ``` bash
-formalyzer --debug --model 'ollama/qwen2.5:14b' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
+formalyzer --debug --model 'ollama/qwen2.5:14b' recc_info.txt sample_letter.pdf sample_urls.txt
 ```
 
 The quality of the form-filling will vary depending on the quality and
