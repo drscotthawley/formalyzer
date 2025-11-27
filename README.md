@@ -125,8 +125,8 @@ can find package manager specific guidelines on
 [conda](https://anaconda.org/drscotthawley/formalyzer) and
 [pypi](https://pypi.org/project/formalyzer/) respectively.
 
-## TODO
+## Limitations
 
-- Test with a less-than-superlative recc letter to make sure it’s not
-  just always selecting the top rating(s) – even though that’s what many
-  a professor might do anyway. ;-)
+Sometimes the LLM will miss certain fields – that’s just the nature of
+the game – so you’ll still need to fill those in by hand. But it gets
+*most* of them!

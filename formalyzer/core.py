@@ -84,7 +84,6 @@ def trim_fields(fields: list[dict]) -> list[dict]:
     for f in fields:
         if f['prefilled']: continue
         f.pop('prefilled', None)
-        #if f['type'] != 'select': f.pop('options', None)
         if f['type'] not in ['select', 'radio']: f.pop('options', None)
         if f.get('label') == '': f.pop('label', None)
         trimmed.append(f)
@@ -136,12 +135,10 @@ def get_field_mappings(
     content_text = re.sub(r'/\*.*?\*/', '', content_text)   # and strip any /* */ -style comments
     if debug: print(f"LLM response:\n{content_text}\n")
     json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
-    #return json.loads(json_match.group(1))
     if json_match:
         return json.loads(json_match.group(1))
     else:
-        # Try parsing the whole response as JSON
-        return json.loads(content_text.strip())
+        return json.loads(content_text.strip())  # Try parsing the whole response as JSON
 
 # %% ../nbs/00_core.ipynb 21
 async def get_element_info(page, field_id, field_type=None):
