@@ -21,8 +21,7 @@ def read_recc_info(info_file:str) -> list:
 # %% ../nbs/00_core.ipynb 7
 def read_urls_file(urls_file:str) -> list:
     "read a text file where each line is a url of a submission site" 
-    text = read_text_file(urls_file)
-    return [line for line in text.splitlines() if line]
+    return [line for line in read_text_file(urls_file).splitlines() if line]
 
 # %% ../nbs/00_core.ipynb 9
 from pypdf import PdfReader
