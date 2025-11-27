@@ -99,15 +99,16 @@ Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 import re 
 
 def get_field_mappings(
-        fields:list[dict],         # list of form fields
+        fields:list[dict],  # list of form fields
         recc_info:str,      # info on recommending person
         letter_text:str,    # text of recc letter
-        model='ollama/qwen3:0.6b', # LLM choice, e.g. "claude-sonnet-4-20250514", 
-        debug=False):
+        model='ANTHROPIC',  # LLM choice, e.g. "ollama/qwen2.5:14b" 
+        debug=False,        # print debugging/status info
+        ):
     """Use LLM to map recommender info and letter to form fields"""
-    if (model.upper() == 'ANTHROPIC') or ('claude' in model.lower()):
+    if model.upper() == 'ANTHROPIC': model = 'claude-sonnet-4-20250514'
+    if 'claude' in model.lower():
         from claudette import Chat
-        model = 'claude-sonnet-4-20250514'  # or whatever default Claude model
     else:
         from lisette import Chat
 
