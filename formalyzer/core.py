@@ -164,7 +164,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     fields = scrape_form_fields(html)
     if debug: print(f"Found {len(fields)} fields")
     
-    if debug: print("Calling LLM to get field mappings")
+    if debug: print(f"Calling LLM ({model}) to get field mappings")
     mappings = get_field_mappings(fields, recc_info, letter_text, model=model, debug=debug)
     if debug: print(f"Got {len(mappings)} mappings from LLM")
     
