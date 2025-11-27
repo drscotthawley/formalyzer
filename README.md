@@ -83,7 +83,12 @@ directory:
 
 For FERPA compliance, running a local model is preferable so that
 student data is not broadcast elsewhere. I recommend using `ollama` and
-starting with `mistral`. Then you can use the `--model` CLI flag, e.g. 
+starting with something small like `mistral`. Start up ollama:
+
+    ollama serve & 
+    ollama pull mistral 
+
+Then you can use the `--model` CLI flag, e.g. 
 
     formalyzer --debug -model 'ollama/mistral' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
 
