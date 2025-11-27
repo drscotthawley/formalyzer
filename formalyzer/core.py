@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['read_text_file', 'read_recc_info', 'read_urls_file', 'read_pdf_text', 'scrape_form_fields', 'make_prompt',
            'get_field_mappings', 'get_element_info', 'should_skip', 'fill_element', 'fill_form',
-           'upload_recommendation', 'process_url', 'read_info', 'setup_browser', 'run_formalyzer', 'main']
+           'upload_recommendation', 'process_url', 'read_info', 'setup_browser', 'run_formalyzer']
 
 # %% ../nbs/00_core.ipynb 4
 import os 
@@ -239,9 +239,9 @@ def main(
     ):
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
     if debug:
-        print("recc_info =\n", recc_info)
-        print("letter_text =\n", letter_text)
-        print("urls =\n", urls)
+        print(f"recc_info ({len(recc_info)} characters) =\n", recc_info)
+        print(f"letter_text ({len(letter_text)} characters)=\n", letter_text)
+        print(frozenset"urls =\n", urls)
     
     # Run the async workflow
     asyncio.run(run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug))
