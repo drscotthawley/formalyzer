@@ -8,13 +8,13 @@ __all__ = ['read_text_file', 'read_urls_file', 'read_pdf_text', 'scrape_form_fie
 # %% ../nbs/00_core.ipynb 4
 import os 
 
-def read_text_file(filename:str) -> list:
+def read_text_file(filename: str) -> list:
     "generic, read any text file" 
     with open(os.path.expanduser(filename)) as f:
         return f.read()
 
 # %% ../nbs/00_core.ipynb 6
-def read_urls_file(filename:str) -> list:
+def read_urls_file(filename: str) -> list:
     "read a text file where each line is a url of a submission site" 
     return [line for line in read_text_file(filename).splitlines() if line]
 
@@ -23,7 +23,7 @@ from pypdf import PdfReader
 import logging
 logging.getLogger("pypdf").setLevel(logging.ERROR)
 
-def read_pdf_text(filename:str):
+def read_pdf_text(filename: str):
     reader = PdfReader(os.path.expanduser(filename))
     return "\n".join(page.extract_text() for page in reader.pages)
 
@@ -32,7 +32,7 @@ from bs4 import BeautifulSoup
 import json, re
 
 
-def scrape_form_fields(html:str) -> list[dict]:
+def scrape_form_fields(html: str) -> list[dict]:
     """Extract all fillable form fields from HTML"""
     soup = BeautifulSoup(html, 'html.parser')
     fields = []
@@ -92,9 +92,9 @@ Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 
 # %% ../nbs/00_core.ipynb 18
 def get_field_mappings(
-        fields:list[dict],  # list of form fields
-        recc_info:str,      # info on recommending person
-        letter_text:str,    # text of recc letter
+        fields: list[dict],  # list of form fields
+        recc_info: str,      # info on recommending person
+        letter_text: str,    # text of recc letter
         model='claude-sonnet-4-20250514',  # LLM choice, e.g. "ollama/qwen2.5:14b" 
         debug=False,        # print debugging/status info
         ):
@@ -196,7 +196,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
 # %% ../nbs/00_core.ipynb 27
-def read_info(recc_info:str, pdf_path:str, urls:str):
+def read_info(recc_info: str, pdf_path: str, urls: str):
     "parse CLI args and read input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
     assert os.path.exists(recc_info), f"File not found: {recc_info}"
@@ -222,7 +222,7 @@ async def setup_browser():
     return pw, browser, page
 
 # %% ../nbs/00_core.ipynb 29
-async def run_formalyzer(recc_info:str, letter_text:str, urls:list, pdf_path:str, model:str, debug=False):
+async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path: str, model: str, debug=False):
     """Main async workflow"""
     pw, browser, page = await setup_browser()
     try:
@@ -240,11 +240,11 @@ import asyncio
 
 @call_parse
 def main(
-    recc_info:str,   # text file with recommender name, address, etc
-    pdf_path:str,    # name of PDF recc letter
-    urls:str,        # txt file w/ one URL per line
-    model:str='ANTHROPIC',  # 'ollama/qwen2.5:14b' for local model
-    debug:bool=False,  # best to always turn this on, actually
+    recc_info: str,   # text file with recommender name, address, etc
+    pdf_path: str,    # name of PDF recc letter
+    urls: str,        # txt file w/ one URL per line
+    model: str='ANTHROPIC',  # 'ollama/qwen2.5:14b' for local model
+    debug: bool=False,  # best to always turn this on, actually
     ):
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
     if model.upper() == 'ANTHROPIC': model = 'claude-sonnet-4-20250514'
