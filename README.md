@@ -83,18 +83,20 @@ directory:
 
 For FERPA compliance, running a local model is preferable so that
 student data is not broadcast elsewhere. I recommend using `ollama` and
-starting with something small like `mistral`. Start up ollama:
+starting with something medium-small like `qwen2.5:14b` (9 GB). Start up
+ollama:
 
     ollama serve & 
-    ollama pull mistral 
+    ollama pull qwen2.5:14b 
 
 Then you can use the `--model` CLI flag, e.g. 
 
-    formalyzer --debug -model 'ollama/mistral' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
+    formalyzer --debug -model 'ollama/qwen2.5:14b' example/recc_info.txt example/sample_letter.pdf example/sample_urls.txt
 
 The quality of the form-filling will vary depending on the quality and
-size of the model you get. For a huge (41 GB) model, try
-`ollama/qwen2:72b`.
+size of the model you get. Smaller models like `mistral` (4 GB) may
+hallucinate many of the form field IDs, resulting in a mostly-blank form
+in the end. For a huge (41 GB) model, try `ollama/qwen2:72b`.
 
 ## Developer Guide
 
