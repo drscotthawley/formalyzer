@@ -102,11 +102,10 @@ def get_field_mappings(
         fields:list[dict],  # list of form fields
         recc_info:str,      # info on recommending person
         letter_text:str,    # text of recc letter
-        model='ANTHROPIC',  # LLM choice, e.g. "ollama/qwen2.5:14b" 
+        model='claude-sonnet-4-20250514',  # LLM choice, e.g. "ollama/qwen2.5:14b" 
         debug=False,        # print debugging/status info
         ):
     """Use LLM to map recommender info and letter to form fields"""
-    if model.upper() == 'ANTHROPIC': model = 'claude-sonnet-4-20250514'
     if 'claude' in model.lower():
         from claudette import Chat
     else:
@@ -251,10 +250,11 @@ def main(
     recc_info:str,   # text file with recommender name, address, etc
     pdf_path:str,    # name of PDF recc letter
     urls:str,        # txt file w/ one URL per line
-    model:str='ANTHROPIC',  # 'ollama/qwen3:0.6b' for local model
+    model:str='ANTHROPIC',  # 'ollama/qwen2.5:14b' for local model
     debug:bool=False,  # best to always turn this on, actually
     ):
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
+    if model.upper() == 'ANTHROPIC': model = 'claude-sonnet-4-20250514'
     if debug:
         print(f"recc_info ({len(recc_info)} characters) =\n", recc_info)
         print(f"letter_text ({len(letter_text)} characters)=\n", letter_text)
