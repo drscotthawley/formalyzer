@@ -100,6 +100,7 @@ def get_field_mappings(
     if debug: print(f"  Prompt length is {len(prompt)} characters")
     response = chat(prompt)
     content_text = response.content[0].text if hasattr(response, 'content') else response.choices[0].message.content
+    if debug: print(f"LLM response:\n{content_text}\n")
     json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
     return json.loads(json_match.group(1))
 
