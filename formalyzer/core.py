@@ -75,7 +75,9 @@ RECOMMENDATION LETTER:
 FORM FIELDS TO FILL:
 {json.dumps([f for f in fields if not f['prefilled']], indent=2)}
 
-For each field, provide the field ID and value to fill. For dropdowns, pick from the options listed.
+For each field, provide the field ID and value to fill. 
+Be careful to use ONLY the exact field IDs provided! 
+For dropdowns, pick from the options listed.
 Pay attention to groups of radio buttons (grouped via div or similar id prefixes) as they may form likert scales.
 Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 """
