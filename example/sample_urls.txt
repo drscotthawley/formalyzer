@@ -1,2 +1,3 @@
 http://localhost:8000/sample_form.html
+http://localhost:8000/sample_form2.html
 
