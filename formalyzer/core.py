@@ -105,7 +105,8 @@ def trim_fields(fields: list[dict]) -> list[dict]:
     for f in fields:
         if f['prefilled']: continue
         f.pop('prefilled', None)
-        if f['type'] != 'select': f.pop('options', None)
+        #if f['type'] != 'select': f.pop('options', None)
+        if f['type'] not in ['select', 'radio']: f.pop('options', None)
         if f.get('label') == '': f.pop('label', None)
         trimmed.append(f)
     return trimmed
