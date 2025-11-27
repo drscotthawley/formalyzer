@@ -21,4 +21,5 @@ d = { 'settings': { 'branch': 'main',
                                  'formalyzer.core.scrape_form_fields': ('core.html#scrape_form_fields', 'formalyzer/core.py'),
                                  'formalyzer.core.setup_browser': ('core.html#setup_browser', 'formalyzer/core.py'),
                                  'formalyzer.core.should_skip': ('core.html#should_skip', 'formalyzer/core.py'),
+                                 'formalyzer.core.trim_fields': ('core.html#trim_fields', 'formalyzer/core.py'),
                                  'formalyzer.core.upload_recommendation': ('core.html#upload_recommendation', 'formalyzer/core.py')}}}
