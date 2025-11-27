@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['read_text_file', 'read_urls_file', 'read_pdf_text', 'scrape_form_fields', 'trim_fields', 'make_prompt',
            'get_field_mappings', 'get_element_info', 'should_skip', 'fill_element', 'fill_form', 'upload_pdf',
-           'process_url', 'read_all_info', 'setup_browser', 'run_formalyzer', 'main']
+           'process_url', 'read_inputs', 'setup_browser', 'run_formalyzer', 'main']
 
 # %% ../nbs/00_core.ipynb 4
 import os 
@@ -193,7 +193,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
 # %% ../nbs/00_core.ipynb 27
-def read_all_info(recc_info: str, pdf_path: str, urls: str):
+def read_inputs(recc_info: str, pdf_path: str, urls: str):
     "parse CLI args and read input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
     recc_info = read_text_file(recc_info) 
@@ -237,7 +237,7 @@ def main(
     model: str='claude-sonnet-4-20250514',  # 'ollama/qwen2.5:14b' for local model
     debug: bool=False,  # best to always turn this on, actually
     ):
-    recc_info, letter_text, urls = read_all_info(recc_info, pdf_path, urls)
+    recc_info, letter_text, urls = read_inputs(recc_info, pdf_path, urls)
     if debug:
         print(f"recc_info ({len(recc_info)} characters) =\n", recc_info)
         print(f"letter_text ({len(letter_text)} characters)=\n", letter_text)
