@@ -69,6 +69,13 @@ def get_field_mappings(
         model='ollama/qwen3:0.6b', # LLM choice, e.g. "claude-sonnet-4-20250514", 
         debug=False):
     """Use LLM to map recommender info and letter to form fields"""
+    if model.upper() == 'ANTHROPIC' or 'claude' in model:
+        from claudette import Chat
+        assert os.environ.get('ANTHROPIC_API_KEY'), "Please set ANTHROPIC_API_KEY environment variable"
+        model = 'claude-sonnet-4-20250514'  # or whatever default Claude model
+    else:
+        from lisette import Chat
+        
     prompt = f"""You are filling out a graduate school recommendation form.
 
 RECOMMENDER INFO:
@@ -84,11 +91,6 @@ For each field, provide the field ID and value to fill. For dropdowns, pick from
 Pay attention to groups of radio buttons (grouped via div or similar id prefixes) as they may form likert scales.
 Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 """
-    if model.upper() == 'ANTHROPIC' or 'claude' in model:
-        from claudette import Chat
-        model = 'claude-sonnet-4-20250514'  # or whatever default Claude model
-    else:
-        from lisette import Chat
 
     chat = Chat(model=model)
     if debug: print(f"  Prompt length is {len(prompt)} characters")
@@ -221,7 +223,6 @@ import asyncio
 
 @call_parse
 def main(recc_info:str, pdf_path:str, urls:str, model:str='ollama/qwen3:0.6b', debug:bool=False):
-    assert os.environ.get('ANTHROPIC_API_KEY'), "Please set ANTHROPIC_API_KEY environment variable" # used by Claudette
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
     if debug:
         print("recc_info =\n", recc_info)
