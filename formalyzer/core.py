@@ -69,13 +69,13 @@ def get_field_mappings(
         model='ollama/qwen3:0.6b', # LLM choice, e.g. "claude-sonnet-4-20250514", 
         debug=False):
     """Use LLM to map recommender info and letter to form fields"""
-    if model.upper() == 'ANTHROPIC' or 'claude' in model:
+    if (model.upper() == 'ANTHROPIC') or ('claude' in model.lower()):
         from claudette import Chat
         assert os.environ.get('ANTHROPIC_API_KEY'), "Please set ANTHROPIC_API_KEY environment variable"
         model = 'claude-sonnet-4-20250514'  # or whatever default Claude model
     else:
         from lisette import Chat
-        
+
     prompt = f"""You are filling out a graduate school recommendation form.
 
 RECOMMENDER INFO:
