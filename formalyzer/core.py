@@ -194,7 +194,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
 
 # %% ../nbs/00_core.ipynb 27
 def read_inputs(recc_info: str, pdf_path: str, urls: str):
-    "parse CLI args and read input files"
+    "reads all input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
     recc_info = read_text_file(recc_info) 
     letter_text = read_pdf_text(pdf_path)
