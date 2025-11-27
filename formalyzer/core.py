@@ -96,6 +96,8 @@ Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 """
 
 # %% ../nbs/00_core.ipynb 19
+import re 
+
 def get_field_mappings(
         fields,         # list of form fields
         recc_info,      # info on recommending person
@@ -115,6 +117,7 @@ def get_field_mappings(
     if debug: print(f"  Prompt length is {len(prompt)} characters")
     response = chat(prompt)
     content_text = response.content[0].text if hasattr(response, 'content') else response.choices[0].message.content
+    content_text = re.sub(r'//.*', '', content_text) # llm may have added JS-style comments, we don't want
     if debug: print(f"LLM response:\n{content_text}\n")
     json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
     return json.loads(json_match.group(1))
