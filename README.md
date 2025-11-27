@@ -68,7 +68,7 @@ $ pip install formalyzer
 After installing, users need to run `playwright install chromium` to
 download the browser binaries.
 
-# Demo
+## Demo
 
 On MacOS, run these commands in Terminal:
 
@@ -116,7 +116,7 @@ $ pip install -e .
 $ nbdev_prepare
 ```
 
-### Documentation
+## Documentation
 
 Documentation can be found hosted on this GitHub
 [repository](https://github.com/drscotthawley/formalyzer)’s
