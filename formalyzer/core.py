@@ -58,8 +58,8 @@ def scrape_form_fields(html:str) -> list[dict]:
 
 # %% ../nbs/00_core.ipynb 14
 def trim_fields(fields: list[dict]) -> list[dict]:
-    """remove unnecessary fields so that we send fewer tokens to the LLM: 
-    Remove prefilled fields and drop options from non-select fields"""
+    """Remove unnecessary fields so we send fewer tokens to LLM: 
+    remove prefilled fields and drop options from non-select fields"""
     trimmed = []
     for f in fields:
         if f['prefilled']: continue
@@ -222,7 +222,7 @@ async def setup_browser():
     return pw, browser, page
 
 # %% ../nbs/00_core.ipynb 29
-async def run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug=False):
+async def run_formalyzer(recc_info:str, letter_text:str, urls:list, pdf_path:str, model:str, debug=False):
     """Main async workflow"""
     pw, browser, page = await setup_browser()
     try:
