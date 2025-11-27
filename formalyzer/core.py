@@ -82,7 +82,7 @@ Pay attention to groups of radio buttons (grouped via div or similar id prefixes
 Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 """
 
-# %% ../nbs/00_core.ipynb 16
+# %% ../nbs/00_core.ipynb 17
 def get_field_mappings(
         fields,         # list of form fields
         recc_info,      # info on recommending person
@@ -106,7 +106,7 @@ def get_field_mappings(
     json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
     return json.loads(json_match.group(1))
 
-# %% ../nbs/00_core.ipynb 18
+# %% ../nbs/00_core.ipynb 19
 async def get_element_info(page, field_id):
     "given an id or a name, find the element on the page and get its info"
     elem = page.locator(f'#{field_id}, [name="{field_id}"]')
@@ -115,7 +115,7 @@ async def get_element_info(page, field_id):
     input_type = await elem.evaluate('el => el.type')
     return elem, tag, input_type
 
-# %% ../nbs/00_core.ipynb 19
+# %% ../nbs/00_core.ipynb 20
 async def should_skip(elem, tag, input_type, skip_prefilled) -> bool:
     "should we fill in this element? Not if there's already a value there."
     if skip_prefilled and tag != 'select' and input_type != 'radio':
@@ -123,7 +123,7 @@ async def should_skip(elem, tag, input_type, skip_prefilled) -> bool:
         if current: return True # there's already a value provided, skip it
     return False
 
-# %% ../nbs/00_core.ipynb 20
+# %% ../nbs/00_core.ipynb 21
 async def fill_element(elem, tag, input_type, field_id, value):
     "actually fill in this element"
     if tag == 'select':
@@ -135,7 +135,7 @@ async def fill_element(elem, tag, input_type, field_id, value):
         else:
             await elem.fill(value)   
 
-# %% ../nbs/00_core.ipynb 21
+# %% ../nbs/00_core.ipynb 22
 async def fill_form(page, mappings, skip_prefilled=True, debug=False):
     """Fill form fields using Playwright"""
     results = {'filled': [], 'skipped': [], 'errors': []}
@@ -156,13 +156,13 @@ async def fill_form(page, mappings, skip_prefilled=True, debug=False):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-# %% ../nbs/00_core.ipynb 22
+# %% ../nbs/00_core.ipynb 23
 async def upload_recommendation(page, file_path):
     """Upload the recommendation PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(file_path)
 
-# %% ../nbs/00_core.ipynb 23
+# %% ../nbs/00_core.ipynb 24
 async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=False):
     """Process a single recommendation URL"""
     await page.goto(url)
@@ -186,7 +186,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
-# %% ../nbs/00_core.ipynb 25
+# %% ../nbs/00_core.ipynb 26
 def read_info(recc_info:str, pdf_path:str, urls:str):
     "parse CLI args and read input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
@@ -202,7 +202,7 @@ def read_info(recc_info:str, pdf_path:str, urls:str):
         urls = [urls]
     return recc_info, letter_text, urls 
 
-# %% ../nbs/00_core.ipynb 26
+# %% ../nbs/00_core.ipynb 27
 async def setup_browser():
     """Connect to Chrome with remote debugging"""
     from playwright.async_api import async_playwright
@@ -212,7 +212,7 @@ async def setup_browser():
     page = await browser.new_page()
     return pw, browser, page
 
-# %% ../nbs/00_core.ipynb 27
+# %% ../nbs/00_core.ipynb 28
 async def run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug=False):
     """Main async workflow"""
     pw, browser, page = await setup_browser()
@@ -225,7 +225,7 @@ async def run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug=Fa
         await browser.close()
         await pw.stop()
 
-# %% ../nbs/00_core.ipynb 28
+# %% ../nbs/00_core.ipynb 29
 from fastcore.script import call_parse
 import asyncio
 
