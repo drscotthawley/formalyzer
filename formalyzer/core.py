@@ -31,55 +31,35 @@ def read_pdf_text(filename: str) -> str:
 from bs4 import BeautifulSoup
 import json, re
 
-# def scrape_form_fields_old(html: str) -> list[dict]:
-#     """Extract all fillable form fields from HTML"""
-#     soup = BeautifulSoup(html, 'html.parser')
-#     fields = []
-#     for inp in soup.find_all(['input', 'select', 'textarea']):
-#         field_id = inp.get('id') or inp.get('name', '')
-#         if not field_id: continue
-#         field_type = inp.get('type', inp.name)
-#         if field_type in ['hidden', 'submit', 'button']: continue
-        
-#         label = soup.find('label', {'for': field_id})
-#         label_text = label.get_text(strip=True) if label else ''
-#         current_value = inp.get('value', '')
-        
-#         options = None
-#         if inp.name == 'select':
-#             options = [opt.get_text(strip=True) for opt in inp.find_all('option') if opt.get_text(strip=True)]
-        
-#         fields.append({ 'id': field_id, 'label': label_text, 'type': field_type, 'options': options,
-#             'prefilled': bool(current_value and field_type not in ['radio','checkbox'] and inp.name != 'select') })
-#     return fields
+def group_radio_buttons(soup, name):
+    """Group radio buttons by name into a single field dict"""
+    radios = soup.find_all('input', {'type': 'radio', 'name': name})
+    first = radios[0] if radios else None
+    field_id = first.get('id', '') if first else ''
+    label = soup.find('label', {'for': field_id}) if field_id else None
+    label_text = label.get_text(strip=True) if label else ''
+    options = [r.get('value', '') for r in radios if r.get('value')]
+    return {'id': name, 'label': label_text, 'type': 'radio', 'options': options, 'prefilled': False}
 
-
-def group_radio_buttons(soup):
-    """Group radio buttons by name, returning dict of {name: field_dict}"""
-    radio_groups = {}
-    for inp in soup.find_all('input', {'type': 'radio'}):
-        name = inp.get('name', '')
-        if not name: continue
-        if name not in radio_groups:
-            field_id = inp.get('id', '')
-            label = soup.find('label', {'for': field_id}) if field_id else None
-            label_text = label.get_text(strip=True) if label else ''
-            radio_groups[name] = {'id': name, 'label': label_text, 'type': 'radio', 'options': [], 'prefilled': False}
-        value = inp.get('value', '')
-        if value:
-            radio_groups[name]['options'].append(value)
-    return radio_groups
-
+# %% ../nbs/00_core.ipynb 12
 def scrape_form_fields(html: str) -> list[dict]:
     """Extract all fillable form fields from HTML"""
     soup = BeautifulSoup(html, 'html.parser')
     fields = []
+    seen_radio_groups = set()
     
     for inp in soup.find_all(['input', 'select', 'textarea']):
         field_id = inp.get('id') or inp.get('name', '')
         if not field_id: continue
         field_type = inp.get('type', inp.name)
-        if field_type in ['hidden', 'submit', 'button', 'radio']: continue  # skip radios here
+        if field_type in ['hidden', 'submit', 'button']: continue
+        
+        if field_type == 'radio':
+            name = inp.get('name', '')
+            if not name or name in seen_radio_groups: continue
+            seen_radio_groups.add(name)
+            fields.append(group_radio_buttons(soup, name))
+            continue
         
         label = soup.find('label', {'for': field_id})
         label_text = label.get_text(strip=True) if label else ''
@@ -94,10 +74,9 @@ def scrape_form_fields(html: str) -> list[dict]:
             'options': options, 'prefilled': bool(current_value and inp.name != 'select')
         })
     
-    fields.extend(group_radio_buttons(soup).values())
     return fields
 
-# %% ../nbs/00_core.ipynb 14
+# %% ../nbs/00_core.ipynb 15
 def trim_fields(fields: list[dict]) -> list[dict]:
     """Remove unnecessary fields so we send fewer tokens to LLM: 
     remove prefilled fields and drop options from non-select fields"""
@@ -111,7 +90,7 @@ def trim_fields(fields: list[dict]) -> list[dict]:
         trimmed.append(f)
     return trimmed
 
-# %% ../nbs/00_core.ipynb 16
+# %% ../nbs/00_core.ipynb 17
 def make_prompt(fields:list[dict], recc_info:str, letter_text:str) -> str:
     "build the prompt that will go to the LLM"
     return f"""You are filling out a graduate school recommendation form.
@@ -133,7 +112,7 @@ Return as valid JSON array: [{{"id": "form_xxx", "value": "..."}}]
 Do not add any comments to the JSON. 
 """
 
-# %% ../nbs/00_core.ipynb 18
+# %% ../nbs/00_core.ipynb 19
 def get_field_mappings(
         fields: list[dict],  # list of form fields
         recc_info: str,      # info on recommending person
@@ -164,16 +143,7 @@ def get_field_mappings(
         # Try parsing the whole response as JSON
         return json.loads(content_text.strip())
 
-# %% ../nbs/00_core.ipynb 20
-# async def get_element_info_old(page, field_id):
-#     "given an id or a name, find the element on the page and get its info"
-#     elem = page.locator(f'#{field_id}, [name="{field_id}"]')
-#     await elem.wait_for(timeout=1000) # 1 second. default timeout for non-found fields is 30 seconds.
-#     tag = await elem.evaluate('el => el.tagName.toLowerCase()')
-#     input_type = await elem.evaluate('el => el.type')
-#     return elem, tag, input_type
-
-
+# %% ../nbs/00_core.ipynb 21
 async def get_element_info(page, field_id, field_type=None):
     "given an id or a name, find the element on the page and get its info"
     if field_type == 'radio':
@@ -185,7 +155,7 @@ async def get_element_info(page, field_id, field_type=None):
     input_type = await elem.evaluate('el => el.type')
     return elem, tag, input_type
 
-# %% ../nbs/00_core.ipynb 21
+# %% ../nbs/00_core.ipynb 22
 async def should_skip(elem, tag, input_type, skip_prefilled) -> bool:
     "should we fill in this element? Not if there's already a value there."
     if skip_prefilled and tag != 'select' and input_type != 'radio':
@@ -193,18 +163,7 @@ async def should_skip(elem, tag, input_type, skip_prefilled) -> bool:
         if current: return True # there's already a value provided, skip it
     return False
 
-# %% ../nbs/00_core.ipynb 22
-# async def fill_element_old(elem, tag, input_type, field_id, value):
-#     "actually fill in this element"
-#     if tag == 'select':
-#         await elem.select_option(label=value)
-#     else:
-#         if input_type == 'radio':
-#             print(f"  Clicking radio button {field_id} with value {value}")
-#             await elem.click()
-#         else:
-#             await elem.fill(value)   
-
+# %% ../nbs/00_core.ipynb 23
 async def fill_element(page, elem, tag, input_type, field_id, value):
     "actually fill in this element"
     if tag == 'select':
@@ -215,27 +174,7 @@ async def fill_element(page, elem, tag, input_type, field_id, value):
     else:
         await elem.fill(value)
 
-# %% ../nbs/00_core.ipynb 23
-# async def fill_form_old(page, mappings, skip_prefilled=True, debug=False):
-#     """Fill form fields using Playwright"""
-#     results = {'filled': [], 'skipped': [], 'errors': []}
-#     for i, item in enumerate(mappings):
-#         field_id, value = item['id'], item['value']
-#         if debug: print(f"Mapping {i+1} of {len(mappings)}:  Processing {field_id}...")
-#         try:
-#             elem, tag, input_type = await get_element_info(page, field_id)
-            
-#             if await should_skip(elem, tag, input_type, skip_prefilled):
-#                 results['skipped'].append(field_id)
-#                 continue
-            
-#             await fill_element(elem, tag, input_type, field_id, value)
-#             results['filled'].append(field_id)
-#         except Exception as e:
-#             print(f"  Error filling {field_id}: {e}")
-#             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
-#     return results
-
+# %% ../nbs/00_core.ipynb 24
 async def fill_form(page, mappings, fields, skip_prefilled=True, debug=False):
     """Fill form fields using Playwright"""
     # Build a type lookup from fields
@@ -260,13 +199,13 @@ async def fill_form(page, mappings, fields, skip_prefilled=True, debug=False):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-# %% ../nbs/00_core.ipynb 24
+# %% ../nbs/00_core.ipynb 25
 async def upload_pdf(page, pdf_path):
     """Upload the recommendation letter PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(pdf_path)
 
-# %% ../nbs/00_core.ipynb 25
+# %% ../nbs/00_core.ipynb 26
 async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=False):
     """Process a single recommendation URL"""
     await page.goto(url)
@@ -281,7 +220,6 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     if debug: print(f"Got {len(mappings)} mappings from LLM")
     
     if debug: print("Filling in form")
-    #results = await fill_form(page, mappings, debug=debug)
     results = await fill_form(page, mappings, fields, debug=debug)
     if debug: print(f"Filled: {len(results['filled'])}, Errors: {len(results['errors'])}")
     
@@ -291,7 +229,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     
     input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
-# %% ../nbs/00_core.ipynb 27
+# %% ../nbs/00_core.ipynb 28
 def read_inputs(recc_info: str, pdf_path: str, urls: str):
     "reads all input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
@@ -301,7 +239,7 @@ def read_inputs(recc_info: str, pdf_path: str, urls: str):
     else: urls = read_urls_file(urls)
     return recc_info, letter_text, urls 
 
-# %% ../nbs/00_core.ipynb 28
+# %% ../nbs/00_core.ipynb 29
 async def setup_browser():
     """Connect to Chrome with remote debugging"""
     from playwright.async_api import async_playwright
@@ -311,7 +249,7 @@ async def setup_browser():
     page = await browser.new_page()
     return pw, browser, page
 
-# %% ../nbs/00_core.ipynb 29
+# %% ../nbs/00_core.ipynb 30
 async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path: str, model: str, debug=False):
     """Main async workflow"""
     pw, browser, page = await setup_browser()
@@ -324,7 +262,7 @@ async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path:
         await browser.close()
         await pw.stop()
 
-# %% ../nbs/00_core.ipynb 30
+# %% ../nbs/00_core.ipynb 31
 from fastcore.script import call_parse
 import asyncio
 
