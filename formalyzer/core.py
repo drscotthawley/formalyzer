@@ -91,8 +91,6 @@ Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 """
 
 # %% ../nbs/00_core.ipynb 18
-import re 
-
 def get_field_mappings(
         fields:list[dict],  # list of form fields
         recc_info:str,      # info on recommending person
