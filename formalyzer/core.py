@@ -64,7 +64,12 @@ def scrape_form_fields(html):
 # %% ../nbs/00_core.ipynb 15
 from claudette import Chat
 
-def get_field_mappings(fields, recc_info, letter_text, model="claude-sonnet-4-20250514", debug=False):
+def get_field_mappings(
+        fields,         # list of form fields
+        recc_info,      # info on recommending person
+        letter_text,    # text of recc letter
+        model='ollama/qwen3:0.6b', # LLM choice, e.g. "claude-sonnet-4-20250514", 
+        debug=False):
     """Use LLM to map recommender info and letter to form fields"""
     prompt = f"""You are filling out a graduate school recommendation form.
 
@@ -144,7 +149,7 @@ async def upload_recommendation(page, file_path):
     await file_input.set_input_files(file_path)
 
 # %% ../nbs/00_core.ipynb 22
-async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
+async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=False):
     """Process a single recommendation URL"""
     await page.goto(url)
     html = await page.content()
@@ -154,7 +159,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, debug=False):
     if debug: print(f"Found {len(fields)} fields")
     
     if debug: print("Calling LLM to get field mappings")
-    mappings = get_field_mappings(fields, recc_info, letter_text, debug=debug)
+    mappings = get_field_mappings(fields, recc_info, letter_text, model=model, debug=debug)
     if debug: print(f"Got {len(mappings)} mappings from LLM")
     
     if debug: print("Filling in form")
@@ -194,14 +199,14 @@ async def setup_browser():
     return pw, browser, page
 
 # %% ../nbs/00_core.ipynb 26
-async def run_formalyzer(recc_info, letter_text, urls, pdf_path, debug=False):
+async def run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug=False):
     """Main async workflow"""
     pw, browser, page = await setup_browser()
     try:
         for i, url in enumerate(urls):
             if not url.strip(): continue  # skip empty urls
             print(f"\nURL {i+1} of {len(urls)}: {url}")
-            await process_url(page, url, recc_info, letter_text, pdf_path, debug=debug)
+            await process_url(page, url, recc_info, letter_text, pdf_path, model, debug=debug)
     finally:
         await browser.close()
         await pw.stop()
@@ -211,7 +216,7 @@ from fastcore.script import call_parse
 import asyncio
 
 @call_parse
-def main(recc_info:str, pdf_path:str, urls:str, debug:bool=False):
+def main(recc_info:str, pdf_path:str, urls:str, model:str='ollama/qwen3:0.6b', debug:bool=False):
     assert os.environ.get('ANTHROPIC_API_KEY'), "Please set ANTHROPIC_API_KEY environment variable" # used by Claudette
     recc_info, letter_text, urls = read_info(recc_info, pdf_path, urls)
     if debug:
@@ -220,4 +225,4 @@ def main(recc_info:str, pdf_path:str, urls:str, debug:bool=False):
         print("urls =\n", urls)
     
     # Run the async workflow
-    asyncio.run(run_formalyzer(recc_info, letter_text, urls, pdf_path, debug))
+    asyncio.run(run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug))
