@@ -31,7 +31,6 @@ def read_pdf_text(filename: str) -> str:
 from bs4 import BeautifulSoup
 import json, re
 
-
 def scrape_form_fields(html: str) -> list[dict]:
     """Extract all fillable form fields from HTML"""
     soup = BeautifulSoup(html, 'html.parser')
@@ -50,10 +49,8 @@ def scrape_form_fields(html: str) -> list[dict]:
         if inp.name == 'select':
             options = [opt.get_text(strip=True) for opt in inp.find_all('option') if opt.get_text(strip=True)]
         
-        fields.append({
-            'id': field_id, 'label': label_text, 'type': field_type,
-            'options': options, 'prefilled': bool(current_value and field_type not in ['radio','checkbox'] and inp.name != 'select')
-        })
+        fields.append({ 'id': field_id, 'label': label_text, 'type': field_type, 'options': options,
+            'prefilled': bool(current_value and field_type not in ['radio','checkbox'] and inp.name != 'select') })
     return fields
 
 # %% ../nbs/00_core.ipynb 14
@@ -201,12 +198,8 @@ def read_info(recc_info: str, pdf_path: str, urls: str):
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
     recc_info = read_text_file(recc_info) 
     letter_text = read_pdf_text(pdf_path)
-    if os.path.exists(os.path.expanduser(urls)): 
-        print(f"File {urls} exists. Reading.")
-        urls = read_urls_file(urls)
-    else: 
-        print(f"No file {urls}. Treating it as a single url") 
-        urls = [urls]
+    if re.match(r"https?://", urls): urls = [urls]
+    else: urls = read_urls_file(urls)
     return recc_info, letter_text, urls 
 
 # %% ../nbs/00_core.ipynb 28
@@ -250,5 +243,4 @@ def main(
         print(f"letter_text ({len(letter_text)} characters)=\n", letter_text)
         print("urls =\n", urls)
     
-    # Run the async workflow
     asyncio.run(run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug))
