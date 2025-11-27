@@ -19,9 +19,9 @@ manually.
 
 ### Requirements:
 
-- `ANTHROPIC_API_KEY` environment variable set (Could support other LLMs
-  later)
-- `beautifulsoup4, playwright, claudette, pypdf, fastcore`
+- Either `ollama` installed locally or `ANTHROPIC_API_KEY` environment
+  variable set
+- `beautifulsoup4, playwright, claudette, lisette, pypdf, fastcore`
 
 ## Usage
 
