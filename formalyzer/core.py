@@ -28,7 +28,7 @@ from pypdf import PdfReader
 import logging
 logging.getLogger("pypdf").setLevel(logging.ERROR)
 
-def read_pdf_text(pdf_file):
+def read_pdf_text(pdf_file:str):
     reader = PdfReader(os.path.expanduser(pdf_file))
     return "\n".join(page.extract_text() for page in reader.pages)
 
@@ -37,7 +37,7 @@ from bs4 import BeautifulSoup
 import json, re
 
 
-def scrape_form_fields(html) -> list[dict]:
+def scrape_form_fields(html:str) -> list[dict]:
     """Extract all fillable form fields from HTML"""
     soup = BeautifulSoup(html, 'html.parser')
     fields = []
@@ -75,7 +75,7 @@ def trim_fields(fields: list[dict]) -> list[dict]:
     return trimmed
 
 # %% ../nbs/00_core.ipynb 17
-def make_prompt(fields, recc_info, letter_text):
+def make_prompt(fields:list[dict], recc_info:str, letter_text:str) -> str:
     "build the prompt that will go to the LLM"
     return f"""You are filling out a graduate school recommendation form.
 
@@ -99,9 +99,9 @@ Return as JSON array: [{{"id": "form_xxx", "value": "..."}}]
 import re 
 
 def get_field_mappings(
-        fields,         # list of form fields
-        recc_info,      # info on recommending person
-        letter_text,    # text of recc letter
+        fields:list[dict],         # list of form fields
+        recc_info:str,      # info on recommending person
+        letter_text:str,    # text of recc letter
         model='ollama/qwen3:0.6b', # LLM choice, e.g. "claude-sonnet-4-20250514", 
         debug=False):
     """Use LLM to map recommender info and letter to form fields"""
