@@ -8,13 +8,13 @@ __all__ = ['read_text_file', 'read_urls_file', 'read_pdf_text', 'scrape_form_fie
 # %% ../nbs/00_core.ipynb 4
 import os 
 
-def read_text_file(filename: str) -> list:
+def read_text_file(filename: str) -> str:
     "generic, read any text file" 
     with open(os.path.expanduser(filename)) as f:
         return f.read()
 
 # %% ../nbs/00_core.ipynb 6
-def read_urls_file(filename: str) -> list:
+def read_urls_file(filename: str) -> list[str]:
     "read a text file where each line is a url of a submission site" 
     return [line for line in read_text_file(filename).splitlines() if line]
 
@@ -23,7 +23,7 @@ from pypdf import PdfReader
 import logging
 logging.getLogger("pypdf").setLevel(logging.ERROR)
 
-def read_pdf_text(filename: str):
+def read_pdf_text(filename: str) -> str:
     reader = PdfReader(os.path.expanduser(filename))
     return "\n".join(page.extract_text() for page in reader.pages)
 
@@ -97,7 +97,7 @@ def get_field_mappings(
         letter_text: str,    # text of recc letter
         model='claude-sonnet-4-20250514',  # LLM choice, e.g. "ollama/qwen2.5:14b" 
         debug=False,        # print debugging/status info
-        ):
+        ) -> str:
     """Use LLM to map recommender info and letter to form fields"""
     if 'claude' in model.lower():
         from claudette import Chat
