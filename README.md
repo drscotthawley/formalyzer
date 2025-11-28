@@ -34,13 +34,14 @@ manually.
 ### Technical Approach
 
 You *could* try to feed raw HTML and PDF into an LLM, but that could be
-prohibitively slow, expensive, and error-prone. Instead:
+prohibitively slow, expensive, and error-prone. Instead, `formalyzer`
+uses
 
-- Use standard packages to pre-process & reduce the inputs: `bs4` for
-  HTML, `pypdf` for PDF
-- Use the LLM *only* for *reading* the reduced input texts (+ a system
+- standard packages to pre-process & reduce the inputs: `bs4` for HTML,
+  `pypdf` for PDF
+- the LLM *only* for *reading* the reduced input texts (+ a system
   prompt) and *outputting* values to assign to form fields.
-- Use another existing package (`playwright`) to fill in those fiels.
+- another existing package (`playwright`) to fill in those fields.
 
 ## Usage
 
