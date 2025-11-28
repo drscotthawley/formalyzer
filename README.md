@@ -34,11 +34,14 @@ manually.
 ### Technical Approach
 
 You *could* try to feed raw HTML and PDF into an LLM, but that could be
-prohibitively slow, expensive, and error-prone. Instead: - Use standard
-packages to pre-process & reduce the inputs: `bs4` for HTML, `pypdf` for
-PDF - Use the LLM *only* for *reading* the reduced input texts (+ a
-system prompt) and *outputting* values to assign to form fields. - Use
-another existing package (`playwright`) actually fill in those fiels.
+prohibitively slow, expensive, and error-prone. Instead:
+
+- Use standard packages to pre-process & reduce the inputs: `bs4` for
+  HTML, `pypdf` for PDF
+- Use the LLM *only* for *reading* the reduced input texts (+ a system
+  prompt) and *outputting* values to assign to form fields.
+- Use another existing package (`playwright`) actually fill in those
+  fiels.
 
 ## Usage
 
