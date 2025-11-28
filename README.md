@@ -9,7 +9,7 @@ I am happy to write a recommendation letter “by hand” for a student. But
 then each graduate school has their own lengthy form by which they try
 to foist upon me their job of data entry and that is tedious, especially
 with many schools and several students. Hence, I’ve wanted to automate
-the form-filling-out for quite a while.
+the form-filling for quite a while.
 
 ## Description
 
@@ -40,8 +40,7 @@ prohibitively slow, expensive, and error-prone. Instead:
   HTML, `pypdf` for PDF
 - Use the LLM *only* for *reading* the reduced input texts (+ a system
   prompt) and *outputting* values to assign to form fields.
-- Use another existing package (`playwright`) actually fill in those
-  fiels.
+- Use another existing package (`playwright`) to fill in those fiels.
 
 ## Usage
 
