@@ -25,11 +25,20 @@ URL in url_list, it will:
 The user will need to review the page and press the Submit button
 manually.
 
-### Requirements:
+### Requirements
 
 - Either `ollama` installed locally or `ANTHROPIC_API_KEY` environment
   variable set
 - `beautifulsoup4, playwright, claudette, lisette, pypdf, fastcore`
+
+### Technical Approach
+
+You *could* try to feed raw HTML and PDF into an LLM, but that could be
+prohibitively slow, expensive, and error-prone. Instead: - Use standard
+packages to pre-process & reduce the inputs: `bs4` for HTML, `pypdf` for
+PDF - Use the LLM *only* for *reading* the reduced input texts (+ a
+system prompt) and *outputting* values to assign to form fields. - Use
+another existing package (`playwright`) actually fill in those fiels.
 
 ## Usage
 

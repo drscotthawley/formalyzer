@@ -135,10 +135,8 @@ def get_field_mappings(
     content_text = re.sub(r'/\*.*?\*/', '', content_text)   # and strip any /* */ -style comments
     if debug: print(f"LLM response:\n{content_text}\n")
     json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
-    if json_match:
-        return json.loads(json_match.group(1))
-    else:
-        return json.loads(content_text.strip())  # Try parsing the whole response as JSON
+    json_str = json_match.group(1) if json_match else content_text.strip()
+    return json.loads(json_str)
 
 # %% ../nbs/00_core.ipynb 21
 async def get_element_info(page, field_id, field_type=None):
