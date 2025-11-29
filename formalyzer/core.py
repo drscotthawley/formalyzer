@@ -244,19 +244,20 @@ async def setup_browser():
     context = browser.contexts[0]
     page = context.pages[0] if context.pages else await context.new_page()
     cdp = await context.new_cdp_session(page)
-    return pw, browser, cdp
+    return pw, browser, page, cdp
 
 # %% ../nbs/00_core.ipynb 30
 async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path: str, model: str, debug=False):
     """Main async workflow"""
-    pw, browser, cdp = await setup_browser()
+    pw, browser, page, cdp = await setup_browser()
     try:
         for i, url in enumerate(urls):
             if not url.strip(): continue
             print(f"\nURL {i+1} of {len(urls)}: {url}")
-            await cdp.send('Target.createTarget', {'url': url}) # get a new tab
-            await asyncio.sleep(0.5)
-            page = browser.pages[-1]
+            if i>0: # open a new tab for other urls
+                await cdp.send('Target.createTarget', {'url': url}) 
+                await asyncio.sleep(0.5)
+                page = browser.contexts[0].pages[-1]
             await process_url(page, url, recc_info, letter_text, pdf_path, model, debug=debug)
     finally:
         await browser.close()
