@@ -35,9 +35,9 @@ manually.
 
 ### Technical Approach
 
-You *could* try to feed raw HTML and PDF into an LLM, but that could be
-prohibitively slow, expensive, and error-prone. Instead, `formalyzer`
-uses
+You *could* try to feed raw HTML and PDF into an LLM, but that might be
+a waste of resources – prohibitively slow, expensive, and error-prone.
+Instead, `formalyzer` uses
 
 - standard packages to pre-process & reduce the inputs: `bs4` for HTML,
   `pypdf` for PDF
