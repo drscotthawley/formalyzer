@@ -169,6 +169,7 @@ def verify_form_fields(html:str, fields:list[dict], student_name:str,
     prompt += """\n\nPlease output new JSON with any corrections, using the same format as the input.  
 Output the complete JSON array, not just the corrections
 Do not include any additional comments or text or explanations. Only valid JSON in your response, please."""
+    prompt += """\nNote: Radio button groups have already been consolidated by name (e.g., rating_oral_1, rating_oral_2, etc. are intentionally separate entries). So you don't necessarily need to regard differences in radio button notation as corrections, but still pay attention to any groups we might have missed. """
 
     chat = Chat(model=model)
     if debug: print(f"  Verification prompt length is {len(prompt)} characters")
