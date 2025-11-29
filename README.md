@@ -43,6 +43,10 @@ Instead, `formalyzer` uses
   prompt) and *outputting* values to assign to form fields.
 - another existing package (`playwright`) to fill in those fields.
 
+Update, v0.0.5: Actually now you may send the raw HTML to Claude for
+verification of BS4’s field detections, using the optional
+`--verify <student name>` CLI arg.
+
 ## Usage
 
 On MacOS, startup the Chrome browser looking to port 9222 by executing
@@ -61,6 +65,11 @@ formalyzer --debug <recc_info.txt> <recc_letter.pdf> <url_list.txt>
 where `recc_info.txt` contains information about the recommender, their
 name, their title, their address, phone number and email.
 `urls_list.txt` is a file containing one URL per line.
+
+Optional: `--verify <student name>` will use Claude to analyze raw HTML
+(with student name redacted) to check the fields detected via BS4.
+Currently using a local LLM for this is way too slow. The field-value
+mapping can be still done via local LLM.
 
 ### Installation
 
