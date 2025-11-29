@@ -5,8 +5,6 @@
 
 ## Motivation
 
-## Motivation
-
 I am happy to write a recommendation letter “by hand” for a student. But
 then each graduate school has their own lengthy, idiosyncratic form,
 foisting upon me their job of data entry. This is tedious work,
