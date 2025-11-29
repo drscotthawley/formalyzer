@@ -252,7 +252,8 @@ async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path:
         for i, url in enumerate(urls):
             if not url.strip(): continue  # skip empty urls
             print(f"\nURL {i+1} of {len(urls)}: {url}")
-            page = await browser.new_page()  # new tab for each URL
+            context = browser.contexts[0]
+            page = await context.new_page()  # get a new tab
             await process_url(page, url, recc_info, letter_text, pdf_path, model, debug=debug)
     finally:
         await browser.close()
