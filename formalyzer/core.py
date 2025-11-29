@@ -150,6 +150,9 @@ def trim_html(html:str, trim_script=False) -> str:
     return str(soup)
 
 # %% ../nbs/00_core.ipynb 22
+def _make_hashable(f):
+    return tuple((k, tuple(v) if isinstance(v, list) else v) for k, v in sorted(f.items()))
+
 def verify_form_fields(html:str, fields:list[dict], student_name:str, 
                         model='claude-sonnet-4-20250514', debug:bool=False) -> list[dict]: 
     from claudette import Chat
@@ -176,7 +179,13 @@ Do not include any additional comments or text or explanations. Only valid JSON 
     json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
     json_str = json_match.group(1) if json_match else content_text.strip()
     try:
-        return json.loads(json_str)
+        verified = json.loads(json_str)
+        if debug:
+            orig_set = {_make_hashable(f) for f in fields}
+            new_set = {_make_hashable(f) for f in verified}
+            print(f"Fields added:   {new_set - orig_set}")
+            print(f"Fields removed: {orig_set - new_set}")
+        return verified
     except Exception as e: 
         print(f"Error verifying fields: {e}\nLeaving original fields unchanged")
         return fields
