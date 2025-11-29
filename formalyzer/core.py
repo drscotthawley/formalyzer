@@ -159,7 +159,8 @@ def verify_form_fields(html:str, fields:list[dict], student_name:str,
 
     html = trim_html(html)
     for name in student_name.split():  # split to first & last on space 
-        html = re.sub(re.escape(name), '[REDACTED]', html, flags=re.IGNORECASE)
+        html = re.sub(r'\b' + re.escape(name) + r'\b', '[REDACTED]', html, flags=re.IGNORECASE)
+
     fields_json = json.dumps(fields, separators=(',', ':'))
 
     prompt = """We're interested in extracting the form fields, labels and any pre-existing values from the following HTML web form. and we have a guess of what those should be. we want you to verify our extraction of form fields. Please note any mistakes, anything we might have missed, etc."""
@@ -184,7 +185,7 @@ Do not include any additional comments or text or explanations. Only valid JSON 
             orig_set = {_make_hashable(f) for f in fields}
             new_set = {_make_hashable(f) for f in verified}
             print(f"Fields added:   {new_set - orig_set}")
-            print(f"Fields removed: {orig_set - new_set}")
+            print(f"\nFields removed: {orig_set - new_set}")
         return verified
     except Exception as e: 
         print(f"Error verifying fields: {e}\nLeaving original fields unchanged")
