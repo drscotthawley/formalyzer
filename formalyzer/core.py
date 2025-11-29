@@ -253,12 +253,16 @@ async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path:
     try:
         for i, url in enumerate(urls):
             if not url.strip(): continue
-            print(f"\nURL {i+1} of {len(urls)}: {url}")
+            print(f"\n------------------  URL {i+1} of {len(urls)}: {url}")
             if i>0: # open a new tab for other urls
                 await cdp.send('Target.createTarget', {'url': 'about:blank'})
                 await asyncio.sleep(0.5)
                 page = browser.contexts[0].pages[-1]
-            await process_url(page, url, recc_info, letter_text, pdf_path, model, debug=debug)
+            try:
+                await process_url(page, url, recc_info, letter_text, pdf_path, model, debug=debug)
+            except Exception as e:
+                print(f"  Error processing {url}: {e}\nMoving on...")
+                continue
     finally:
         await browser.close()
         await pw.stop()
