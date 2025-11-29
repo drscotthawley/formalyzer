@@ -1,0 +1,132 @@
+[
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "source\n\n\n\n read_text_file (filename:str)\n\ngeneric, read any text file\n\nrecc_info = read_text_file(\"../example/recc_info.txt\") \nprint(recc_info)\n\nReccomender Name: Teacher Person \nTitle: Professor of Cleverness \n\nAddress: \nDepartment of Curiosities\nGeneric University \n1337 Generic Pl. \nSpringfield, WA 31416 USA\n\nPhone: 555-123-1337\nEmail: teacher.person@generic.edu\n\n\n\n\nsource\n\n\n\n\n read_urls_file (filename:str)\n\nread a text file where each line is a url of a submission site\n\nurls = read_urls_file(\"../example/sample_urls.txt\") \nprint(f\"{len(urls)} urls in list\")\nfor i, url in enumerate(urls): \n    print(f\"{i+1} of {len(urls)}: {url}\")\n\n2 urls in list\n1 of 2: http://localhost:8000/sample_form.html\n2 of 2: http://localhost:8000/sample_form2.html\n\n\n\nsource\n\n\n\n\n read_pdf_text (filename:str)\n\n\nletter_text = read_pdf_text(\"../example/sample_letter.pdf\")\nprint(letter_text)\n\n   Dear Graduate Admissions Committee,  I am writing to recommend Student Person for admission to your graduate program. Having worked closely with them for two years in both teaching and research capacities, I can say they are among the strongest students I have encountered in over a decade of academic work.  Student Person took several of my advanced courses — Quantum Rollercoasters, Physics of Impossible Machines, and a seminar on Neural Networks for Curious Minds. They also worked with me on an independent research project. In every setting, they showed sharp intellectual ability, creative thinking, and real persistence. Their coursework went beyond surface-level competence; they clearly grasped the deeper principles at play. As a researcher, they brought fresh perspectives while staying receptive to guidance.  What stands out most is their dependability. They consistently met deadlines and produced high-quality work. During our independent project, they actually moved ahead of schedule, diving into advanced material sooner than expected. That kind of self-direction is uncommon and bodes well for graduate study.  They are also an effective communicator — clear and organized in writing, articulate in discussion. They collaborate well, contributing to group dynamics without dominating them.  Overall, I would rate Student Person as outstanding across the board: intellectual ability, research aptitude, writing, and professional potential. Their creativity, interpersonal skills, and motivation are all exceptional. I am confident they will be a valuable addition to your program.  Feel free to reach out if you would like to discuss further.  Please feel free to contact me if you require any additional information.  Sincerely,    Teacher Person, Ph.D. Professor of Cleverness  \n          DEPARTMENT of  CURIOSITIES \n1337 Generic Pl Springfield, WA 31415-2654  phone 555-123-1337 fax  555-123-5555",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "core.html#basic-file-io",
+    "href": "core.html#basic-file-io",
+    "title": "core",
+    "section": "",
+    "text": "source\n\n\n\n read_text_file (filename:str)\n\ngeneric, read any text file\n\nrecc_info = read_text_file(\"../example/recc_info.txt\") \nprint(recc_info)\n\nReccomender Name: Teacher Person \nTitle: Professor of Cleverness \n\nAddress: \nDepartment of Curiosities\nGeneric University \n1337 Generic Pl. \nSpringfield, WA 31416 USA\n\nPhone: 555-123-1337\nEmail: teacher.person@generic.edu\n\n\n\n\nsource\n\n\n\n\n read_urls_file (filename:str)\n\nread a text file where each line is a url of a submission site\n\nurls = read_urls_file(\"../example/sample_urls.txt\") \nprint(f\"{len(urls)} urls in list\")\nfor i, url in enumerate(urls): \n    print(f\"{i+1} of {len(urls)}: {url}\")\n\n2 urls in list\n1 of 2: http://localhost:8000/sample_form.html\n2 of 2: http://localhost:8000/sample_form2.html\n\n\n\nsource\n\n\n\n\n read_pdf_text (filename:str)\n\n\nletter_text = read_pdf_text(\"../example/sample_letter.pdf\")\nprint(letter_text)\n\n   Dear Graduate Admissions Committee,  I am writing to recommend Student Person for admission to your graduate program. Having worked closely with them for two years in both teaching and research capacities, I can say they are among the strongest students I have encountered in over a decade of academic work.  Student Person took several of my advanced courses — Quantum Rollercoasters, Physics of Impossible Machines, and a seminar on Neural Networks for Curious Minds. They also worked with me on an independent research project. In every setting, they showed sharp intellectual ability, creative thinking, and real persistence. Their coursework went beyond surface-level competence; they clearly grasped the deeper principles at play. As a researcher, they brought fresh perspectives while staying receptive to guidance.  What stands out most is their dependability. They consistently met deadlines and produced high-quality work. During our independent project, they actually moved ahead of schedule, diving into advanced material sooner than expected. That kind of self-direction is uncommon and bodes well for graduate study.  They are also an effective communicator — clear and organized in writing, articulate in discussion. They collaborate well, contributing to group dynamics without dominating them.  Overall, I would rate Student Person as outstanding across the board: intellectual ability, research aptitude, writing, and professional potential. Their creativity, interpersonal skills, and motivation are all exceptional. I am confident they will be a valuable addition to your program.  Feel free to reach out if you would like to discuss further.  Please feel free to contact me if you require any additional information.  Sincerely,    Teacher Person, Ph.D. Professor of Cleverness  \n          DEPARTMENT of  CURIOSITIES \n1337 Generic Pl Springfield, WA 31415-2654  phone 555-123-1337 fax  555-123-5555",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "core.html#parsing-html-form",
+    "href": "core.html#parsing-html-form",
+    "title": "core",
+    "section": "Parsing HTML (Form)",
+    "text": "Parsing HTML (Form)\n\nsource\n\ngroup_radio_buttons\n\n group_radio_buttons (soup, name)\n\nGroup radio buttons by name into a single field dict\n\nsource\n\n\nscrape_form_fields\n\n scrape_form_fields (html:str)\n\nExtract all fillable form fields from HTML\n\nhtml = read_text_file(\"../example/sample_form.html\") \nfields = scrape_form_fields(html) \n[f['id'] for f in fields][10:30]\n\n['title',\n 'phone',\n 'email',\n 'addr1',\n 'addr2',\n 'city',\n 'state',\n 'zip',\n 'country',\n 'months_known',\n 'years_range',\n 'capacity',\n 'rating_intellectual',\n 'rating_scientific',\n 'rating_research',\n 'rating_prev_work',\n 'rating_lab',\n 'rating_oral',\n 'rating_writing',\n 'rating_originality']",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "core.html#llm-usage",
+    "href": "core.html#llm-usage",
+    "title": "core",
+    "section": "LLM Usage",
+    "text": "LLM Usage\nNext we prompt the LLM to figure out which form fields apply, and how:\n\nsource\n\ntrim_fields\n\n trim_fields (fields:list[dict])\n\nRemove unnecessary fields so we send fewer tokens to LLM: remove prefilled fields and drop options from non-select fields\n\nprint(f\"Fields JSON length:  {len(json.dumps(fields, separators=(',', ':')))} characters\")\ntrimmed = trim_fields(fields) \nprint(f\"Trimmed JSON length: {len(json.dumps(trimmed, separators=(',', ':')))} characters\")\n\n\nsource\n\n\nmake_prompt\n\n make_prompt (fields:list[dict], recc_info:str, letter_text:str)\n\nbuild the prompt that will go to the LLM\n\nprompt = make_prompt(trimmed, recc_info, letter_text)\nprint(f\"Prompt is {len(prompt)} characters\")\nprompt[2000:3000] # brief inspection\n\n\nsource\n\n\nget_field_mappings\n\n get_field_mappings (fields:list[dict], recc_info:str, letter_text:str,\n                     model='claude-sonnet-4-20250514', debug=False)\n\nUse LLM to map recommender info and letter to form fields\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nfields\nlist\n\nlist of form fields\n\n\nrecc_info\nstr\n\ninfo on recommending person\n\n\nletter_text\nstr\n\ntext of recc letter\n\n\nmodel\nstr\nclaude-sonnet-4-20250514\nLLM choice, e.g. “ollama/qwen2.5:14b”\n\n\ndebug\nbool\nFalse\nprint debugging/status info\n\n\nReturns\nlist",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "formalyzer",
+    "section": "",
+    "text": "I am happy to write a recommendation letter “by hand” for a student. But then each graduate school has their own lengthy, idiosyncratic form, foisting upon me their job of data entry. This is tedious work, especially with many schools and several students. Thus, I’ve wanted to automate the form-filling for quite a while.",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#motivation",
+    "href": "index.html#motivation",
+    "title": "formalyzer",
+    "section": "",
+    "text": "I am happy to write a recommendation letter “by hand” for a student. But then each graduate school has their own lengthy, idiosyncratic form, foisting upon me their job of data entry. This is tedious work, especially with many schools and several students. Thus, I’ve wanted to automate the form-filling for quite a while.",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#description",
+    "href": "index.html#description",
+    "title": "formalyzer",
+    "section": "Description",
+    "text": "Description\nformalyzer will scrape the text from the PDF recc letter, and for each URL in url_list, it will:\n\nlaunch a browser tab for that url\nfill in the form using what the LLM has gleaned from the recc letter\nattach the PDF via the form’s upload/attachment button\n\n…and do no more.\nThe user will need to review the page and press the Submit button manually.\n\nRequirements\n\nEither ollama installed locally or ANTHROPIC_API_KEY environment variable set\nbeautifulsoup4, playwright, claudette, lisette, pypdf, fastcore\n\n\n\nTechnical Approach\nYou could try to feed raw HTML and PDF into an LLM, but that might be a waste of resources – prohibitively slow, expensive, and error-prone. Instead, formalyzer uses\n\nstandard packages to pre-process & reduce the inputs: bs4 for HTML, pypdf for PDF\nthe LLM only for reading the reduced input texts (+ a system prompt) and outputting values to assign to form fields.\nanother existing package (playwright) to fill in those fields.\n\nUpdate, v0.0.5: Actually now you may send the raw HTML to Claude for verification of BS4’s field detections, using the optional --verify &lt;student name&gt; CLI arg.",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "formalyzer",
+    "section": "Usage",
+    "text": "Usage\nOn MacOS, startup the Chrome browser looking to port 9222 by executing this command in the terminal:\n/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug\nThen you can run this command:\nformalyzer --debug &lt;recc_info.txt&gt; &lt;recc_letter.pdf&gt; &lt;url_list.txt&gt;\nwhere recc_info.txt contains information about the recommender, their name, their title, their address, phone number and email. urls_list.txt is a file containing one URL per line.\nOptional: --verify &lt;student name&gt; will use Claude to analyze raw HTML (with student name redacted) to check the fields detected via BS4. Currently using a local LLM for this is way too slow. The field-value mapping can be still done via local LLM.\n\nInstallation\nInstall latest from the GitHub repository:\n$ pip install git+https://github.com/drscotthawley/formalyzer.git\nor from pypi:\n$ pip install formalyzer\nAfter installing, users need to run playwright install chromium to download the browser binaries.",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#demo",
+    "href": "index.html#demo",
+    "title": "formalyzer",
+    "section": "Demo",
+    "text": "Demo\nOn MacOS, run these commands in Terminal:\n\n/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug &\ncd example\npython -m http.server 8000 &\nexport ANTHROPIC_API_KEY=\"__your_API_key_goes_here__\"\nformalyzer --debug recc_info.txt sample_letter.pdf sample_urls.txt",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#local-llm-execution",
+    "href": "index.html#local-llm-execution",
+    "title": "formalyzer",
+    "section": "Local LLM Execution",
+    "text": "Local LLM Execution\nFor FERPA compliance, running a local model is preferable so that student data is not broadcast elsewhere. I recommend using ollama and starting with something medium-small like qwen2.5:14b (9 GB). Start up ollama:\nollama serve & \nollama pull qwen2.5:14b \nThen you can use the --model CLI flag, e.g. \nformalyzer --debug --model 'ollama/qwen2.5:14b' recc_info.txt sample_letter.pdf sample_urls.txt\nThe quality of the form-filling will vary depending on the quality and size of the model you get. Smaller models like mistral (4 GB) may hallucinate many of the form field IDs, resulting in a mostly-blank form in the end. For a huge (41 GB) model, try ollama/qwen2:72b.",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#developer-guide",
+    "href": "index.html#developer-guide",
+    "title": "formalyzer",
+    "section": "Developer Guide",
+    "text": "Developer Guide\n\nInstall formalyzer in Development mode\n# make sure formalyzer package is installed in development mode\n$ pip install -e .\n\n# make changes under nbs/ directory\n# ...\n\n# compile to have changes apply to formalyzer\n$ nbdev_prepare",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#documentation",
+    "href": "index.html#documentation",
+    "title": "formalyzer",
+    "section": "Documentation",
+    "text": "Documentation\nDocumentation can be found hosted on this GitHub repository’s pages. Additionally you can find package manager specific guidelines on conda and pypi respectively.",
+    "crumbs": [
+      "formalyzer"
+    ]
+  },
+  {
+    "objectID": "index.html#limitations",
+    "href": "index.html#limitations",
+    "title": "formalyzer",
+    "section": "Limitations",
+    "text": "Limitations\nSometimes the LLM will miss certain fields – that’s just the nature of the game – so you’ll still need to fill those in by hand. But it gets most of them!",
+    "crumbs": [
+      "formalyzer"
+    ]
+  }
+]
