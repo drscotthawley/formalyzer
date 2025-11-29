@@ -2,8 +2,9 @@
 
 # %% auto 0
 __all__ = ['read_text_file', 'read_urls_file', 'read_pdf_text', 'group_radio_buttons', 'scrape_form_fields', 'trim_fields',
-           'make_prompt', 'get_field_mappings', 'get_element_info', 'should_skip', 'fill_element', 'fill_form',
-           'upload_pdf', 'process_url', 'read_inputs', 'setup_browser', 'run_formalyzer', 'main']
+           'make_prompt', 'get_field_mappings', 'trim_html', 'verify_form_fields', 'get_element_info', 'should_skip',
+           'fill_element', 'fill_form', 'upload_pdf', 'process_url', 'read_inputs', 'setup_browser', 'run_formalyzer',
+           'main']
 
 # %% ../nbs/00_core.ipynb 4
 import os 
@@ -118,7 +119,7 @@ def get_field_mappings(
         letter_text: str,    # text of recc letter
         model='claude-sonnet-4-20250514',  # LLM choice, e.g. "ollama/qwen2.5:14b" 
         debug=False,        # print debugging/status info
-        ) -> str:
+        ) -> list[dict]:
     """Use LLM to map recommender info and letter to form fields"""
     if 'claude' in model.lower():
         from claudette import Chat
@@ -139,6 +140,48 @@ def get_field_mappings(
     return json.loads(json_str)
 
 # %% ../nbs/00_core.ipynb 21
+def trim_html(html:str, trim_script=False) -> str: 
+    "remove irrelevant html before sending to remote LLM"
+    soup = BeautifulSoup(html, 'html.parser')
+    tags_to_remove = ['style', 'header', 'footer', 'nav']
+    if trim_script: tags_to_remove.append('script')
+    for tag in soup(tags_to_remove):
+        tag.decompose()
+    return str(soup)
+
+# %% ../nbs/00_core.ipynb 22
+def verify_form_fields(html:str, fields:list[dict], student_name:str, 
+                        model='claude-sonnet-4-20250514', debug:bool=False) -> list[dict]: 
+    from claudette import Chat
+
+    html = trim_html(html)
+    for name in student_name.split():  # split to first & last on space 
+        html = re.sub(re.escape(name), '[REDACTED]', html, flags=re.IGNORECASE)
+    fields_json = json.dumps(fields, separators=(',', ':'))
+
+    prompt = """We're interested in extracting the form fields, labels and any pre-existing values from the following HTML web form. and we have a guess of what those should be. we want you to verify our extraction of form fields. Please note any mistakes, anything we might have missed, etc."""
+    prompt += "\n\nHere is the raw HTML:\n"+html
+    prompt += "\n\nAnd here is our best guess at the form fields (in JSON format):\n"+fields_json 
+    prompt += """\n\nPlease output new JSON with any corrections, using the same format as the input.  
+Output the complete JSON array, not just the corrections
+Do not include any additional comments or text or explanations. Only valid JSON in your response, please."""
+
+    chat = Chat(model=model)
+    if debug: print(f"  Verification prompt length is {len(prompt)} characters")
+    response = chat(prompt)
+    content_text = response.content[0].text if hasattr(response, 'content') else response.choices[0].message.content
+    content_text = re.sub(r'//.*', '', content_text)        # llm may have added JS-style comments, we don't want
+    content_text = re.sub(r'/\*.*?\*/', '', content_text)   # and strip any /* */ -style comments
+    if debug: print(f"Verify LLM response:\n{content_text}\n")
+    json_match = re.search(r'```json\s*(.*?)\s*```', content_text, re.DOTALL)
+    json_str = json_match.group(1) if json_match else content_text.strip()
+    try:
+        return json.loads(json_str)
+    except Exception as e: 
+        print(f"Error verifying fields: {e}\nLeaving original fields unchanged")
+        return fields
+
+# %% ../nbs/00_core.ipynb 24
 async def get_element_info(page, field_id, field_type=None):
     "given an id or a name, find the element on the page and get its info"
     if field_type == 'radio':
@@ -150,7 +193,7 @@ async def get_element_info(page, field_id, field_type=None):
     input_type = await elem.evaluate('el => el.type')
     return elem, tag, input_type
 
-# %% ../nbs/00_core.ipynb 22
+# %% ../nbs/00_core.ipynb 25
 async def should_skip(elem, tag, input_type, skip_prefilled) -> bool:
     "should we fill in this element? Not if there's already a value there."
     if skip_prefilled and tag != 'select' and input_type != 'radio':
@@ -158,7 +201,7 @@ async def should_skip(elem, tag, input_type, skip_prefilled) -> bool:
         if current: return True # there's already a value provided, skip it
     return False
 
-# %% ../nbs/00_core.ipynb 23
+# %% ../nbs/00_core.ipynb 26
 async def fill_element(page, elem, tag, input_type, field_id, value):
     "actually fill in this element"
     if tag == 'select':
@@ -169,7 +212,7 @@ async def fill_element(page, elem, tag, input_type, field_id, value):
     else:
         await elem.fill(value)
 
-# %% ../nbs/00_core.ipynb 24
+# %% ../nbs/00_core.ipynb 27
 async def fill_form(page, mappings, fields, skip_prefilled=True, debug=False):
     """Fill form fields using Playwright"""
     # Build a type lookup from fields
@@ -194,14 +237,14 @@ async def fill_form(page, mappings, fields, skip_prefilled=True, debug=False):
             results['errors'].append({'id': field_id, 'error': str(e)[:50]})
     return results
 
-# %% ../nbs/00_core.ipynb 25
+# %% ../nbs/00_core.ipynb 28
 async def upload_pdf(page, pdf_path):
     """Upload the recommendation letter PDF"""
     file_input = page.locator('input[type="file"]').first
     await file_input.set_input_files(pdf_path)
 
-# %% ../nbs/00_core.ipynb 26
-async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=False):
+# %% ../nbs/00_core.ipynb 29
+async def process_url(page, url, recc_info, letter_text, pdf_path, model, verify='', debug=False):
     """Process a single recommendation URL"""
     await page.goto(url)
     html = await page.content()
@@ -209,6 +252,10 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     if debug: print("Scraping form fields")
     fields = scrape_form_fields(html)
     if debug: print(f"Found {len(fields)} fields")
+
+    if verify: 
+        if debug: print(f'Verifying fields with Claude, redacting name "{verify}"')
+        fields = verify_form_fields(html, fields, verify, debug=debug)
     
     if debug: print(f"Calling LLM ({model}) to get field mappings")
     mappings = get_field_mappings(fields, recc_info, letter_text, model=model, debug=debug)
@@ -224,7 +271,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     
     #input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
-# %% ../nbs/00_core.ipynb 28
+# %% ../nbs/00_core.ipynb 31
 def read_inputs(recc_info: str, pdf_path: str, urls: str):
     "reads all input files"
     recc_info, pdf_path = [os.path.expanduser(_) for _ in [recc_info, pdf_path]]
@@ -234,7 +281,7 @@ def read_inputs(recc_info: str, pdf_path: str, urls: str):
     else: urls = read_urls_file(urls)
     return recc_info, letter_text, urls 
 
-# %% ../nbs/00_core.ipynb 29
+# %% ../nbs/00_core.ipynb 32
 async def setup_browser():
     """Connect to Chrome with remote debugging"""
     from playwright.async_api import async_playwright
@@ -246,8 +293,9 @@ async def setup_browser():
     cdp = await context.new_cdp_session(page)
     return pw, browser, page, cdp
 
-# %% ../nbs/00_core.ipynb 30
-async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path: str, model: str, debug=False):
+# %% ../nbs/00_core.ipynb 33
+async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path: str, model: str, 
+                        verify='', debug=False):
     """Main async workflow"""
     pw, browser, page, cdp = await setup_browser()
     try:
@@ -259,7 +307,7 @@ async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path:
                 await asyncio.sleep(0.5)
                 page = browser.contexts[0].pages[-1]
             try:
-                await process_url(page, url, recc_info, letter_text, pdf_path, model, debug=debug)
+                await process_url(page, url, recc_info, letter_text, pdf_path, model, verify=verify, debug=debug)
             except Exception as e:
                 print(f"  Error processing {url}: {e}\nMoving on...")
                 continue
@@ -267,7 +315,7 @@ async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path:
         await browser.close()
         await pw.stop()
 
-# %% ../nbs/00_core.ipynb 31
+# %% ../nbs/00_core.ipynb 34
 from fastcore.script import call_parse
 import asyncio
 
@@ -277,6 +325,7 @@ def main(
     pdf_path: str,    # name of PDF recc letter
     urls: str,        # txt file w/ one URL per line
     model: str='claude-sonnet-4-20250514',  # 'ollama/qwen2.5:14b' for local model
+    verify: str='',    # Option to verify field extraction via Claude. Value should be student name
     debug: bool=False,  # best to always turn this on, actually
     ):
     recc_info, letter_text, urls = read_inputs(recc_info, pdf_path, urls)
@@ -285,4 +334,4 @@ def main(
         print(f"letter_text ({len(letter_text)} characters)=\n", letter_text)
         print("urls =\n", urls)
     
-    asyncio.run(run_formalyzer(recc_info, letter_text, urls, pdf_path, model, debug))
+    asyncio.run(run_formalyzer(recc_info, letter_text, urls, pdf_path, model, verify, debug))

@@ -22,4 +22,6 @@ d = { 'settings': { 'branch': 'main',
                                  'formalyzer.core.setup_browser': ('core.html#setup_browser', 'formalyzer/core.py'),
                                  'formalyzer.core.should_skip': ('core.html#should_skip', 'formalyzer/core.py'),
                                  'formalyzer.core.trim_fields': ('core.html#trim_fields', 'formalyzer/core.py'),
-                                 'formalyzer.core.upload_pdf': ('core.html#upload_pdf', 'formalyzer/core.py')}}}
+                                 'formalyzer.core.trim_html': ('core.html#trim_html', 'formalyzer/core.py'),
+                                 'formalyzer.core.upload_pdf': ('core.html#upload_pdf', 'formalyzer/core.py'),
+                                 'formalyzer.core.verify_form_fields': ('core.html#verify_form_fields', 'formalyzer/core.py')}}}
