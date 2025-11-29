@@ -13,7 +13,7 @@ automate the form-filling for quite a while.
 
 ## Description
 
-Formalyzer will scrape the text from the PDF recc letter, and for each
+`formalyzer` will scrape the text from the PDF recc letter, and for each
 URL in url_list, it will:
 
 - launch a browser tab for that url
