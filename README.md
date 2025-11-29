@@ -5,11 +5,13 @@
 
 ## Motivation
 
+## Motivation
+
 I am happy to write a recommendation letter “by hand” for a student. But
-then each graduate school has their own lengthy form by which they try
-to foist upon me their job of data entry and that is tedious, especially
-with many schools and several students. Hence, I’ve wanted to automate
-the form-filling for quite a while.
+then each graduate school has their own lengthy, idiosyncratic form,
+foisting upon me their job of data entry. This is tedious work,
+especially with many schools and several students. Thus, I’ve wanted to
+automate the form-filling for quite a while.
 
 ## Description
 
