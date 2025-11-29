@@ -241,8 +241,9 @@ async def setup_browser():
 
     pw = await async_playwright().start()
     browser = await pw.chromium.connect_over_cdp("http://localhost:9222")
-    page = browser.pages[0] if browser.pages else await browser.new_page()
-    cdp = await page.context.new_cdp_session(page)
+    context = browser.contexts[0]
+    page = context.pages[0] if context.pages else await context.new_page()
+    cdp = await context.new_cdp_session(page)
     return pw, browser, cdp
 
 # %% ../nbs/00_core.ipynb 30
