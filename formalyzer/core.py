@@ -241,19 +241,21 @@ async def setup_browser():
 
     pw = await async_playwright().start()
     browser = await pw.chromium.connect_over_cdp("http://localhost:9222")
-    page = await browser.new_page()
-    return pw, browser, page
+    page = browser.pages[0] if browser.pages else await browser.new_page()
+    cdp = await page.context.new_cdp_session(page)
+    return pw, browser, cdp
 
 # %% ../nbs/00_core.ipynb 30
 async def run_formalyzer(recc_info: str, letter_text: str, urls: list, pdf_path: str, model: str, debug=False):
     """Main async workflow"""
-    pw, browser, page = await setup_browser()
+    pw, browser, cdp = await setup_browser()
     try:
         for i, url in enumerate(urls):
-            if not url.strip(): continue  # skip empty urls
+            if not url.strip(): continue
             print(f"\nURL {i+1} of {len(urls)}: {url}")
-            context = browser.contexts[0]
-            page = await context.new_page()  # get a new tab
+            await cdp.send('Target.createTarget', {'url': url}) # get a new tab
+            await asyncio.sleep(0.5)
+            page = browser.pages[-1]
             await process_url(page, url, recc_info, letter_text, pdf_path, model, debug=debug)
     finally:
         await browser.close()
