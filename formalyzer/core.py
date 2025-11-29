@@ -222,7 +222,7 @@ async def process_url(page, url, recc_info, letter_text, pdf_path, model, debug=
     await upload_pdf(page, pdf_path)
     if debug: print("Uploaded PDF")
     
-    input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
+    #input("Review the form, then press Enter to continue to next URL (or Ctrl+C to stop)...")
 
 # %% ../nbs/00_core.ipynb 28
 def read_inputs(recc_info: str, pdf_path: str, urls: str):
